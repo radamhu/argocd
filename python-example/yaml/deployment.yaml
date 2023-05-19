@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaskdemo1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flaskdemo1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: flaskdemo1
+    spec:
+      containers:
+      - name: flaskdemo1
+        image: radam/flask-kubernetes:latest
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "384Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+          name: flaskdemo1
