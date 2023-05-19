@@ -30,13 +30,6 @@ spec:
         ports:
           - name: redis-server
             containerPort: 6379
-        volumeMounts:
-          - name: lv-storage
-            mountPath: /data
         env:
             - name: ALLOW_EMPTY_PASSWORD
               value: "yes"
-      volumes:
-        - name: lv-storage
-          persistentVolumeClaim:
-            claimName: redis-pvc
