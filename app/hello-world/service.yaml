@@ -7,8 +7,8 @@ spec:
     app: hello-world
   type: LoadBalancer
   ports:
-    - name: docker-port
+    - name: hello-world
       protocol: TCP
       port: 80
       targetPort: 80
-  loadBalancerIP: 10.0.0.55
+
