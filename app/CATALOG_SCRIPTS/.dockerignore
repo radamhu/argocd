@@ -1,0 +1,12 @@
+Dockerfile*
+venv
+.venv
+.git
+.gitignore
+.psenvrc
+azure-pipelines.yml
+CATALOG_SCRIPTS.code-workspace
+Makefile
+edc_lineage/*.xlsx
+*.png
+.vscode
