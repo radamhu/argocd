@@ -13,7 +13,7 @@ terraform/.terraform.lock.hcl
 # Crash log files
 terraform/crash.log
 terraform/crash.*.log
-terraform/.terraform/
+terraform/.terraform/*
 # .tfvars files
 terraform/variables.tfvars
 terraform/*.tfvars.json
