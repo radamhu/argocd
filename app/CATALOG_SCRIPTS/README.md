@@ -11,7 +11,8 @@ $ pip install diagrams or you can use requirements.txt
 ## Initiate a docker based python APP development environment
 
 ```
-clone repository && cd into it
+clone repository
+cd repository
 create .gitignore
 create .dockerignore
 python -m venv .venv
@@ -23,6 +24,8 @@ python -m venv .venv
 # pip install python-dotenv 
 pip install -r requirements.txt 
 # pip freeze -l > requirements.txt 
+.envrc # eval "$(direnv hook zsh)"
+.psenvrc
 .env
     encodeUser.py Administrator user
     for Powershell:
