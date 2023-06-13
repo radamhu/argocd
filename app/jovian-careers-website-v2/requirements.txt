@@ -1,0 +1,4 @@
+Flask
+gunicorn
+sqlalchemy==1.4.23
+pymysql

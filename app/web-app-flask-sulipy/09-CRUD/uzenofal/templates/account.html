@@ -1,0 +1,8 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+    <!-- keletkezik egy curret_user objektum a flask_login miatt -->
+    <h2>{{ current_user.username }}</h2>
+
+{% endblock content %}

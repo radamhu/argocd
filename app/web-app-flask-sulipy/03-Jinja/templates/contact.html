@@ -1,0 +1,9 @@
+<!-- honlap elemek blokkol össszeépítésést jinja template-ben inheritance-nek hívja 
+vesszük az alap osztályt, itt index.html és annak bizonyos pontját írjuk felül
+-->
+{% extends 'index.html' %}
+
+{% block content %}
+  <h2 class="my-3">Jelentkezés a kurzusokra: </h2>
+  <p>info@sulipy.hu</p>
+{% endblock content %}
