@@ -24,7 +24,7 @@ spec:
       #nodeSelector:
         #node-type: worker
       containers:
-        - image: rinormaloku/sentiment-analysis-frontend
+        - image: radam/sentiment-analysis-frontend
           imagePullPolicy: Always                         # 7
           name: sa-frontend
           ports:

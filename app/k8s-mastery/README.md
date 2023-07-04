@@ -16,6 +16,7 @@ https://www.shiwaforce.com/blog/devops/2018/05/24/kubernetes-3-ora-alatt-kiindul
 
 ```bash
 cd sa-frontend
+nvm install specific node version
 npm install
 npm start
 npm run build
@@ -60,7 +61,7 @@ cd sa-logic
 .env # Powershell: $env:VARIABLE="VALUE"
 Makefile
 Dockerfile
-# docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+# docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 sudo docker build --no-cache -t $DOCKER_USER_ID/sentiment-analysis-logic .
 docker push $DOCKER_USER_ID/sentiment-analysis-logic
 docker pull $DOCKER_USER_ID/sentiment-analysis-logic
@@ -100,10 +101,10 @@ cd sa-frontend
 #sops --encrypt --age $(cat $SOPS_AGE_KEY_FILE |grep -oP "public key: \K(.*)") --in-place .env
 Makefile
 Dockerfile
-docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+# docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 sudo docker build --no-cache -t $DOCKER_USER_ID/sentiment-analysis-frontend .
 docker push $DOCKER_USER_ID/sentiment-analysis-frontend
-docker pull $DOCKER_USER_ID/sentiment-analysis-frontend 
+docker pull $DOCKER_USER_ID/sentiment-analysis-frontend
 docker run --name sa-frontend -it -d -p 80:80 $DOCKER_USER_ID/sentiment-analysis-frontend
 #sops --decrypt --age $(cat $SOPS_AGE_KEY_FILE |grep -oP "public key: \K(.*)") --in-place .env
 # docker exec -it $DOCKER_USER_ID/sentiment-analysis-frontend /bin/bash
