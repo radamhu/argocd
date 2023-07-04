@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment                                          # 1
 metadata:
   name: sa-frontend
+  namespace: sa-ns
   labels:
     app: sa-frontend
 spec:
@@ -20,9 +21,18 @@ spec:
       labels:
         app: sa-frontend                                  # 6
     spec:
+      #nodeSelector:
+        #node-type: worker
       containers:
         - image: rinormaloku/sentiment-analysis-frontend
           imagePullPolicy: Always                         # 7
           name: sa-frontend
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"

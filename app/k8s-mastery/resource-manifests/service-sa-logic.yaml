@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sa-logic
+  namespace: sa-ns
 spec:
   ports:
     - port: 80
