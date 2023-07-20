@@ -4,6 +4,8 @@ https://www.shiwaforce.com/blog/devops/2018/05/24/kubernetes-3-ora-alatt-kiindul
 
 ![Architecture](./static/image-1.png)
 
+![Alt text](readme.excalidraw.png)
+
 # root settings
 
 ```bash
