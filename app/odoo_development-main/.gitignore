@@ -1,0 +1,93 @@
+*~
+*.sw[mnpcod]
+.tmp
+*.tmp
+*.tmp.*
+UserInterfaceState.xcuserstate
+$RECYCLE.BIN/
+
+*.log
+log.txt
+
+# sphinx build directories
+_build/
+
+# dotfiles
+.*
+!.gitignore
+!.github
+!.mailmap
+# compiled python files
+*.py[co]
+__pycache__/
+# setup.py egg_info
+*.egg-info
+# emacs backup files
+*~
+# hg stuff
+*.orig
+status
+# odoo filestore
+odoo/filestore
+# maintenance migration scripts
+odoo/addons/base/maintenance
+
+# generated for windows installer?
+install/win32/*.bat
+install/win32/meta.py
+
+# needed only when building for win32
+setup/win32/static/less/
+setup/win32/static/wkhtmltopdf/
+setup/win32/static/postgresql*.exe
+
+# js tooling
+node_modules
+jsconfig.json
+tsconfig.json
+package-lock.json
+package.json
+.husky
+
+# various virtualenv
+/bin/
+/build/
+/dist/
+/include/
+/lib/
+/man/
+/share/
+/src/
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+
+# Miscellaneous
+/.angular
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
