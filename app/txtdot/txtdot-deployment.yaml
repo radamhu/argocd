@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: txtdot
+  name: txtdot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: txtdot
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: txtdot
+    spec:
+      containers:
+        - image: ghcr.io/txtdot/txtdot:latest
+          name: txtdot
+          ports:
+            - containerPort: 8080
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/.env
+              name: txtdot-claim0
+      restartPolicy: Always
+      volumes:
+        - name: txtdot-claim0
+          persistentVolumeClaim:
+            claimName: txtdot-claim0
+status: {}
