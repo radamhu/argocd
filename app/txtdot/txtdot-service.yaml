@@ -9,11 +9,14 @@ metadata:
     io.kompose.service: txtdot
   name: txtdot
 spec:
+  type: LoadBalancer
   ports:
-    - name: "8080"
+    - name: txtdot-8080
+      protocol: TCP
       port: 8080
       targetPort: 8080
   selector:
+    app: txtdot
     io.kompose.service: txtdot
 status:
   loadBalancer: {}
