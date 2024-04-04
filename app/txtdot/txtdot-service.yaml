@@ -1,15 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: txtdot
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.26.0 (40646f47)
+    # external-dns.alpha.kubernetes.io/hostname: "{{ appdomain }}"
+    # external-dns.alpha.kubernetes.io/ttl: "1"
+    # external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
   creationTimestamp: null
   labels:
     io.kompose.service: txtdot
-  name: txtdot
 spec:
-  type: LoadBalancer
   ports:
     - name: txtdot-8080
       protocol: TCP
@@ -18,5 +20,5 @@ spec:
   selector:
     app: txtdot
     io.kompose.service: txtdot
-status:
-  loadBalancer: {}
+  type: LoadBalancer
+  # if type: LoadBalancer is enabled than comment out INGRESS section below
