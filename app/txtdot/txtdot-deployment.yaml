@@ -21,7 +21,7 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
-              name: txtdot
+              name: txtdot-8080
           resources: {}
           volumeMounts:
             - mountPath: /app/.env
