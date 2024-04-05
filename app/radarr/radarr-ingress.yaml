@@ -28,7 +28,7 @@ metadata:
     # cert-manager.io/cluster-issuer: letsencrypt-staging
     # traefik.ingress.kubernetes.io/router.middlewares: default-my-basic-auth@kubernetescrd
   labels:
-    io.kompose.service: radarr
+    app: radarr
 spec:
   # tls:
   #   - secretName: "{{ appname }}"-home-local-tls
