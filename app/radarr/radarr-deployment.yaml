@@ -28,8 +28,8 @@ spec:
               name: radarr-claim0
             - mountPath: /movies
               name: radarr-claim1
-            - mountPath: /downloads
-              name: radarr-claim2
+            - mountPath: /downloads # The mountpoint inside the container
+              name: nfs-vol
       restartPolicy: Always
       volumes:
         - name: radarr-claim0
@@ -38,6 +38,7 @@ spec:
         - name: radarr-claim1
           persistentVolumeClaim:
             claimName: radarr-claim1
-        - name: radarr-claim2
-          persistentVolumeClaim:
-            claimName: radarr-claim2
+        - name: nfs-vol
+          nfs:
+            server: 192.168.0.21 # IP to our NFS server
+            path: /media/downloads # The path to our NFS share # The exported directory
