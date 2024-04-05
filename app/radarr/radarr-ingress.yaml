@@ -18,7 +18,7 @@ spec:
   - host: radarr.home.adaminformatika.hu
     http:
       paths:
-        - path: /radarr
+        - path: /
           pathType: Prefix
           backend:
             service:
