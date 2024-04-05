@@ -1,0 +1,47 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   annotations:
+#     kompose.cmd: kompose convert
+#     kompose.version: 1.26.0 (40646f47)
+#   creationTimestamp: null
+#   labels:
+#     io.kompose.service: radarr
+#   name: radarr
+# spec:
+#   ports:
+#     - name: "7878"
+#       port: 7878
+#       targetPort: 7878
+#   selector:
+#     io.kompose.service: radarr
+# status:
+#   loadBalancer: {}
+
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: radarr
+  namespace: radarr
+  annotations:
+    # kubernetes.io/ingress.class: traefik
+    # cert-manager.io/cluster-issuer: letsencrypt-staging
+    # traefik.ingress.kubernetes.io/router.middlewares: default-my-basic-auth@kubernetescrd
+  labels:
+    io.kompose.service: radarr
+spec:
+  # tls:
+  #   - secretName: "{{ appname }}"-home-local-tls
+  #     hosts:
+  #       - "{{ appdomain }}"
+  rules:
+  - host: radarr
+    http:
+      paths:
+        - path: /radarr
+          pathType: Prefix
+          backend:
+            service:
+              name: radarr
+              port:
+                number: 7878
