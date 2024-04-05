@@ -16,13 +16,6 @@ spec:
         app: radarr
     spec:
       containers:
-        - env:
-            - name: PGID
-              value: "1000"
-            - name: PUID
-              value: "1000"
-            - name: TZ
-              value: Etc/UTC
         - image: lscr.io/linuxserver/radarr:latest
           name: radarr
           ports:
