@@ -1,0 +1,47 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   annotations:
+#     kompose.cmd: kompose convert
+#     kompose.version: 1.26.0 (40646f47)
+#   creationTimestamp: null
+#   labels:
+#     io.kompose.service: sonarr
+#   name: sonarr
+# spec:
+#   ports:
+#     - name: "7878"
+#       port: 7878
+#       targetPort: 7878
+#   selector:
+#     io.kompose.service: sonarr
+# status:
+#   loadBalancer: {}
+
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: sonarr
+  namespace: sonarr
+  annotations:
+    # kubernetes.io/ingress.class: traefik
+    # cert-manager.io/cluster-issuer: letsencrypt-staging
+    # traefik.ingress.kubernetes.io/router.middlewares: default-my-basic-auth@kubernetescrd
+  labels:
+    app: sonarr
+spec:
+  # tls:
+  #   - secretName: "{{ appname }}"-home-local-tls
+  #     hosts:
+  #       - "{{ appdomain }}"
+  rules:
+  - host: traefik.home.adaminformatika.hu
+    http:
+      paths:
+        - path: /sonarr
+          pathType: Prefix
+          backend:
+            service:
+              name: sonarr
+              port:
+                number: 8989

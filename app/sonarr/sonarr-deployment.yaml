@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sonarr
+    spec:
+      containers:
+        - image: lscr.io/linuxserver/sonarr:latest
+          name: sonarr
+          ports:
+            - containerPort: 7878
+              name: sonarr-7878
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /config
+              name: sonarr-claim0
+            - mountPath: /movies
+              name: sonarr-claim1
+            - mountPath: /downloads
+              name: sonarr-claim2
+      restartPolicy: Always
+      volumes:
+        - name: sonarr-claim0
+          persistentVolumeClaim:
+            claimName: sonarr-claim0
+        - name: sonarr-claim1
+          persistentVolumeClaim:
+            claimName: sonarr-claim1
+        - name: sonarr-claim2
+          persistentVolumeClaim:
+            claimName: sonarr-claim2
