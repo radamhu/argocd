@@ -35,7 +35,7 @@ spec:
   #     hosts:
   #       - "{{ appdomain }}"
   rules:
-  - host: radarr
+  - host: traefik.home.adaminformatika.hu
     http:
       paths:
         - path: /radarr
