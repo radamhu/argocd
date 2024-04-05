@@ -19,8 +19,8 @@ spec:
         - image: lscr.io/linuxserver/sonarr:latest
           name: sonarr
           ports:
-            - containerPort: 7878
-              name: sonarr-7878
+            - containerPort: 8989
+              name: sonarr-8989
               protocol: TCP
           resources: {}
           volumeMounts:
