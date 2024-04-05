@@ -26,18 +26,16 @@ spec:
           volumeMounts:
             - mountPath: /config
               name: sonarr-claim0
-            - mountPath: /movies
-              name: sonarr-claim1
-            - mountPath: /downloads
-              name: sonarr-claim2
+            - mountPath: /tv
+              name: nfs-vol
+            - mountPath: /downloads # The mountpoint inside the container
+              name: nfs-vol
       restartPolicy: Always
       volumes:
         - name: sonarr-claim0
           persistentVolumeClaim:
             claimName: sonarr-claim0
-        - name: sonarr-claim1
-          persistentVolumeClaim:
-            claimName: sonarr-claim1
-        - name: sonarr-claim2
-          persistentVolumeClaim:
-            claimName: sonarr-claim2
+        - name: nfs-vol
+          nfs:
+            server: 192.168.0.21 # IP to our NFS server
+            path: /media/ # The path to our NFS share # The exported directory
