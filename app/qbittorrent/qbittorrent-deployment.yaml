@@ -16,17 +16,17 @@ spec:
         app: qbittorrent
     spec:
       containers:
-        - env:
-          - name: PGID
-            value: "100"
-          - name: PUID
-            value: "1000"
-          - name: TZ
-            value: Europe/Budapest
-          - name: WEBUI_PORT
-            value: "8080"
         - image: lscr.io/linuxserver/qbittorrent:latest
           name: qbittorrent
+          env:
+            - name: PGID
+              value: "100"
+            - name: PUID
+              value: "1000"
+            - name: TZ
+              value: Europe/Budapest
+            - name: WEBUI_PORT
+              value: "8080"
           ports:
             - containerPort: 8080
               protocol: TCP
