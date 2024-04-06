@@ -7,13 +7,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: flaresolverr
+      app: flaresolverr
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        name: flaresolverr
+        app: flaresolverr
     spec:
       containers:
         - name: flaresolverr
