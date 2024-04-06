@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prowlarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+      containers:
+        - image: linuxserver/prowlarr:latest
+          name: prowlarr
+          ports:
+            - containerPort: 9696
+              name: prowlarr-9696
+          resources: {}
+          volumeMounts:
+            - mountPath: /config
+              name: prowlarr-claim0
+      hostname: prowlarr
+      restartPolicy: Always
+      volumes:
+        - name: prowlarr-claim0
+          persistentVolumeClaim:
+            claimName: prowlarr-claim0
+status: {}

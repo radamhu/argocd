@@ -1,0 +1,11 @@
+version: "3"
+services:
+  prowlarr: 
+    image: linuxserver/prowlarr:latest 
+    container_name: prowlarr 
+    hostname: prowlarr 
+    volumes: 
+      - ./configs/mediarr/prowlarr:/config 
+    ports: 
+      - 9696:9696 
+    restart: unless-stopped
