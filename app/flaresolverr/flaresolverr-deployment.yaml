@@ -2,14 +2,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    name: flaresolverr
+  name: flaresolverr
 spec:
   replicas: 1
   selector:
     matchLabels:
       name: flaresolverr
-  strategy: {}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
