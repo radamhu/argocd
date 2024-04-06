@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+        - env:
+            - name: PGID
+              value: "100"
+            - name: PUID
+              value: "1000"
+            - name: HU
+              value: Budapest/UTC
+            - name: WEBUI_PORT
+              value: 8080
+          image: lscr.io/linuxserver/qbittorrent:latest
+          name: qbittorrent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+              name: qbittorrent-8080
+            - containerPort: 6881
+              protocol: TCP
+              name: qbittorrent-6881
+            - containerPort: 6881
+              protocol: UDP
+              name: qbittorrent-6881
+          resources: {}
+          volumeMounts:
+            - mountPath: /config
+              name: qbittorrent-claim0
+            - mountPath: /downloads # The mountpoint inside the container
+              name: nfs-vol
+      restartPolicy: Always
+      volumes:
+        - name: qbittorrent-claim0
+          persistentVolumeClaim:
+            claimName: qbittorrent-claim0
+        - name: nfs-vol
+          nfs:
+            server: 192.168.0.21 # IP to our NFS server
+            path: /media/ # The path to our NFS share # The exported directory
+status: {}
