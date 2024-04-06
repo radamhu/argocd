@@ -33,10 +33,10 @@ spec:
               name: qbit-8080
             - containerPort: 6881
               protocol: TCP
-              name: qbit-6881
+              name: qbit-6881-tcp
             - containerPort: 6881
               protocol: UDP
-              name: qbit-6881
+              name: qbit-6881-udp
           resources: {}
           volumeMounts:
             - mountPath: /config
