@@ -21,8 +21,8 @@ spec:
               value: "100"
             - name: PUID
               value: "1000"
-            - name: HU
-              value: Budapest/UTC
+            - name: TZ
+              value: Europe/Budapest
             - name: WEBUI_PORT
               value: 8080
           image: lscr.io/linuxserver/qbittorrent:latest
