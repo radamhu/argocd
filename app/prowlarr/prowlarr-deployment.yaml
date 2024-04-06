@@ -21,14 +21,13 @@ spec:
           ports:
             - containerPort: 9696
               name: prowlarr-9696
+              protocol: TCP
           resources: {}
           volumeMounts:
             - mountPath: /config
               name: prowlarr-claim0
-      hostname: prowlarr
       restartPolicy: Always
       volumes:
         - name: prowlarr-claim0
           persistentVolumeClaim:
             claimName: prowlarr-claim0
-status: {}
