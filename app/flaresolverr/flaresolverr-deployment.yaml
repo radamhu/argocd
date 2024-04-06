@@ -18,11 +18,11 @@ spec:
       containers:
         - env:
             - name: CAPTCHA_SOLVER
-              value: none
+              value: "none"
             - name: LOG_HTML
               value: "false"
             - name: LOG_LEVEL
-              value: info
+              value: "info"
           image: ghcr.io/flaresolverr/flaresolverr:latest
           name: flaresolverr
           ports:
@@ -31,4 +31,3 @@ spec:
               protocol: TCP
           resources: {}
       restartPolicy: Always
-status: {}
