@@ -12,5 +12,7 @@ spec:
       targetPort: 6881
   selector:
     app: qbittorrent
+  type: LoadBalancer
+  # if type: LoadBalancer is enabled than comment out INGRESS section below
 status:
   loadBalancer: {}
