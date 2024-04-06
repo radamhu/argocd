@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    name: flaresolverr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: flaresolverr
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        name: flaresolverr
+    spec:
+      containers:
+        - env:
+            - name: CAPTCHA_SOLVER
+              value: none
+            - name: LOG_HTML
+              value: "false"
+            - name: LOG_LEVEL
+              value: info
+          image: ghcr.io/flaresolverr/flaresolverr:latest
+          name: flaresolverr
+          ports:
+            - containerPort: 8191
+              name: flaresolverr-8191
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}
