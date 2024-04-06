@@ -1,0 +1,28 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: overseerr
+  namespace: overseerr
+annotations:
+    kubernetes.io/ingress.class: traefik
+    # cert-manager.io/cluster-issuer: letsencrypt-staging
+    # traefik.ingress.kubernetes.io/router.middlewares: default-my-basic-auth@kubernetescrd
+labels:
+  app: overseerr
+spec:
+  # tls:
+  #   - secretName: "{{ appname }}"-home-local-tls
+  #     hosts:
+  #       - "{{ appdomain }}"
+  rules:
+    - host: overseerr.home.adaminformatika.hu
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: overseerr
+                port:
+                  number: 5055
+
