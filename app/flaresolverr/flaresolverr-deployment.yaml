@@ -20,7 +20,7 @@ spec:
           image: ghcr.io/flaresolverr/flaresolverr:latest
           ports:
             - containerPort: 8191
-              name: flaresolverr-8191
+              name: flaresolverr
               protocol: TCP
           resources: {}
       restartPolicy: Always

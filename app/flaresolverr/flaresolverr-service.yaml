@@ -5,7 +5,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - name: flaresolverr-8191
+    - name: flaresolverr
       port: 8191
   selector:
     app: flaresolverr
