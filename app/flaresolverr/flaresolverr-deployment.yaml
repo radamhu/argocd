@@ -18,13 +18,6 @@ spec:
       containers:
         - name: flaresolverr
           image: ghcr.io/flaresolverr/flaresolverr:latest
-          env:
-            - name: CAPTCHA_SOLVER
-              value: "none"
-            - name: LOG_HTML
-              value: "false"
-            - name: LOG_LEVEL
-              value: "info"
           ports:
             - containerPort: 8191
               name: flaresolverr-8191
