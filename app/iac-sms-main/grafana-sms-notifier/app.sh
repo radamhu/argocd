@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo ' Logging ... \n'
-bw get totp VodafoneGroup_rolandcsaba.adam && saml2aws login --force --region=eu-central-1 --profile=saml && sed 's+command: aws+command: /usr/local/bin/aws+g' ~/.kube/config
+bw get totp rolandcsaba.adam && saml2aws login --force --region=eu-central-1 --profile=saml && sed 's+command: aws+command: /usr/local/bin/aws+g' ~/.kube/config
 # echo '(.venv) ➜  saml2aws script'
 # saml2aws script 
 echo ' Echo saml2aws env ... \n'

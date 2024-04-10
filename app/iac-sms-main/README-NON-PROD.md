@@ -4,7 +4,7 @@
 
 ![](docs/terraform-docs.excalidraw.png)
 
-Currently the terraform codes are hosted under https://github.vodafone.com/VFDE-BusinessOnline/iac
+Currently the terraform codes are hosted under 
 
 ## variables 
 

@@ -28,7 +28,7 @@ install the latest Docker Desktop for Mac
 ```bash
 
 brew install saml2aws # for aws saml authentication
-saml2aws login --force --region=eu-central-1 --profile=saml # login w/ your vodafone user
+saml2aws login --force --region=eu-central-1 --profile=saml # login w/ your user
 saml2aws script # list locally created aws variables
 brew install awscli  # for managing aws cloud
 # optional

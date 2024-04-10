@@ -33,25 +33,18 @@ print(myParameter['Parameter']['Value'])
 # CUSTOMIZE THE FOLLOWING VARIABLES
 START_DATE = date.today()
 END_DATE = date.today() + timedelta(days=1)
-MY_ONCALL_API_BASE_URL = "https://oncall.tooling.prod.vbg.aws.de.vodafone.com/api/v1/schedules"
-MY_ONCALL_API_KEY = "c2861db783f9eb7148b80652efc983803db611840a30c5f7b1a55dcec29d59ab"
+MY_ONCALL_API_BASE_URL = "https://***/api/v1/schedules"
+MY_ONCALL_API_KEY = "***"
 headers = {"Authorization": MY_ONCALL_API_KEY}
 schedule_ids = [schedule["id"] for schedule in requests.get(MY_ONCALL_API_BASE_URL, headers=headers).json()["results"]]
 user_on_call_hours = {}
 on_duty_ops_dict = {
-    "attila.fabrik@vodafone.com": "+4915209770910",
-    "rolandcsaba.adam@vodafone.com": "+36304723089",
-    "laurikristian.gombos@vodafone.com": "+36706659419",
-    "daniel.dudek@vodafone.com": "+491722520156",
-    "philipp.clemens@vodafone.com": "+491773291683"
+    "rolandcsaba.adam@test.com": "+36301234567",
 }
 
 print(f'schedule_ids: {type(schedule_ids)}')
 print(f'schedule_ids: {schedule_ids}')
 logger.info(schedule_ids)
-
-#curl "https://oncall.tooling.prod.vbg.aws.de.vodafone.com/api/v1/schedules/SMV6KBS55E7NW/final_shifts?start_date=$(date -Idate)&end_date=$(date -v+1d -Idate)" --request GET --header "Authorization: c2861db783f9eb7148b80652efc983803db611840a30c5f7b1a55dcec29d59ab" --header "Content-Type: application/json" | json_pp
-#curl "https://oncall.tooling.prod.vbg.aws.de.vodafone.com/api/v1/schedules/SMV6KBS55E7NW/final_shifts?start_date=2024-03-20&end_date=2024-03-20" --request GET --header "Authorization: c2861db783f9eb7148b80652efc983803db611840a30c5f7b1a55dcec29d59ab" --header "Content-Type: application/json" | json_pp
 
 for schedule_id in schedule_ids:
     response = requests.get(f"{MY_ONCALL_API_BASE_URL}/{schedule_id}/final_shifts?start_date={START_DATE}&end_date={END_DATE}", headers=headers)
