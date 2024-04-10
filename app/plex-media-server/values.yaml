@@ -169,8 +169,8 @@ priorityClassName: ""
 commonLabels: {}
 
 extraEnv: {
-  PLEX_CLAIM: "claim-bJQsPst8z4Chya1sa9wo"
-  PLEX_UID: "0"
+  PLEX_CLAIM: "claim-bJQsPst8z4Chya1sa9wo",
+  PLEX_UID: "0",
   PLEX_GID: "0"
 }
 # extraEnv:
