@@ -27,7 +27,7 @@ ingress:
 pms:
   # The storage class to use when provisioning the pms config volume
   # this needs to be created manually, null will use the default
-  storageClassName: null
+  storageClassName: nfs
 
   # the volume size to provision for the PMS database
   configStorage: 2Gi
