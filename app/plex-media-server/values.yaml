@@ -170,6 +170,8 @@ commonLabels: {}
 
 extraEnv: {
   PLEX_CLAIM: "claim-bJQsPst8z4Chya1sa9wo"
+  PLEX_UID: "0"
+  PLEX_GID: "0"
 }
 # extraEnv:
   # This claim is optional, and is only used for the first startup of PMS
@@ -177,8 +179,6 @@ extraEnv: {
 #   HOSTNAME: "PlexServer"
 #   TZ: "Etc/UTC"
 #   PLEX_UPDATE_CHANNEL: "5"
-#   PLEX_UID: "uid of plex user"
-#   PLEX_GID: "group id of plex user"
   # a list of CIDRs that can use the server without authentication
   # this is only used for the first startup of PMS
 #   ALLOWED_NETWORKS: "0.0.0.0/0"
