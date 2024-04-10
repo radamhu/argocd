@@ -172,7 +172,7 @@ extraEnv: {}
 # extraEnv:
   # This claim is optional, and is only used for the first startup of PMS
   # The claim is obtained from https://www.plex.tv/claim/ is is only valid for a few minutes
-   PLEX_CLAIM: "claim-bJQsPst8z4Chya1sa9wo"
+    PLEX_CLAIM: "claim-bJQsPst8z4Chya1sa9wo"
 #   HOSTNAME: "PlexServer"
 #   TZ: "Etc/UTC"
 #   PLEX_UPDATE_CHANNEL: "5"
