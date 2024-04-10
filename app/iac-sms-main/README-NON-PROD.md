@@ -103,7 +103,7 @@ Grafana Oncall API test
 
 ```bash
 # NON-PROD
-curl "https://oncall.vf-eo.de/api/v1/schedules/S1FJVXUFK34YV/final_shifts?start_date=$(date -Idate)&end_date=$(date -v+1d -Idate)" --request GET --header "Authorization: 09c89dc33f45f61cb9e50e090c323cd4c44c13b86697e166b60939db15c8ad50" --header "Content-Type: application/json" | json_pp
+curl "https://***/api/v1/schedules/S1FJVXUFK34YV/final_shifts?start_date=$(date -Idate)&end_date=$(date -v+1d -Idate)" --request GET --header "Authorization: 09c89dc33f45f61cb9e50e090c323cd4c44c13b86697e166b60939db15c8ad50" --header "Content-Type: application/json" | json_pp
 ```
 
 Grafana Oncall webhook SMS

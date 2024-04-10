@@ -8,7 +8,7 @@ In this guide we will learn how to setup our Amazon API gateway with Lambda pyth
 
 Furthermore, we will learn how to develop on Macos locally an AWS lambda python function. We will also learn howto deploy the whole infrastructure by terraform.
 
-You can always find an updated HLD documentation at this location https://de.confluence.agile.vodafone.com/display/ETO/SMS+Alerting
+You can always find an updated HLD documentation at this location 
 
 For all of this, you will need an AWS account and some development tools (docker, aws,saml2aws, aws-sam-cli, tfenv, gh).
 
@@ -26,7 +26,6 @@ install the latest Docker Desktop for Mac
 ### aws, saml2aws, lambda development tools
 
 ```bash
-https://de.confluence.agile.vodafone.com/display/VBO/SAML2AWS+for+AWS+access
 
 brew install saml2aws # for aws saml authentication
 saml2aws login --force --region=eu-central-1 --profile=saml # login w/ your vodafone user
@@ -90,16 +89,10 @@ sam deploy --guided --profile saml
 
 ### terraform cli
 
-https://de.confluence.agile.vodafone.com/display/ETO/HowTo+-+Apply+Infrastructure+Changes+Via+Terraform
-
 ```bash
 brew install tfenv
 tfenv install 1.3.6 # currently (2024.01.18) supported terraform version at Vodafone
 ```
-
-
-
-## [link -> Deploy PROD Grafana parts, Amazon API gateway, Lambda by terraform](./README-PROD.md)
 
 ## [link -> Deploy NON-PROD Grafana parts, Amazon API gateway, Lambda by terraform](./README-NON-PROD.md)
 
