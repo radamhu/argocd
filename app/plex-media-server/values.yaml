@@ -13,7 +13,7 @@ global:
 
 ingress:
   # Specify if an ingress resource for the pms server should be created or not
-  enabled: false
+  enabled: true
 
   # The ingress class that should be used
   ingressClassName: "traefik"
