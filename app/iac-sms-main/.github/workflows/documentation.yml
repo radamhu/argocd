@@ -1,0 +1,10 @@
+name: Generate terraform docs
+on:
+  push:
+    branches: 
+      - main
+jobs:
+  generate-docs:
+    uses: VFDE-BusinessOnline/gh-actions-reusable-workflows/.github/workflows/terraform-docs.yml@main
+    with:
+      workdir: .

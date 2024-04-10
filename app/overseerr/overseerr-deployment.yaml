@@ -20,7 +20,7 @@ spec:
           name: overseerr
           ports:
             - containerPort: 5055
-              name: overseer-5055
+              name: overseer
               protocol: TCP
           resources: {}
           volumeMounts:
