@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: flaskdemo1
-        image: radam/flask-kubernetes:latest
+        image: radam/flask-kubernetes@sha256:8ca83562c2ab77409d958c1f0ff965c9e6989d4d72c62a6e93f82d2dd2905d9e
         resources:
           requests:
             memory: "128Mi"

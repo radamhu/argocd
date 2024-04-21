@@ -18,7 +18,7 @@ spec:
       #nodeSelector:
         #node-type: worker
       containers:
-      - image: nginxdemos/hello
+      - image: nginxdemos/hello@sha256:1b5efb2e43f1e788af78774060d76d6c49b81b81f627b0e7f25782618d932d7b
         name: hello-world
         resources:
           requests:

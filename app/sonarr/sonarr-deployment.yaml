@@ -16,7 +16,7 @@ spec:
         app: sonarr
     spec:
       containers:
-        - image: lscr.io/linuxserver/sonarr:latest
+        - image: lscr.io/linuxserver/sonarr@sha256:21e7125d5abb15a80d0742ce138591d140354ac384637391322467becc524a2c
           name: sonarr
           ports:
             - containerPort: 8989

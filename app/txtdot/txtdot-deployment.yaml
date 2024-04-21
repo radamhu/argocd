@@ -16,7 +16,7 @@ spec:
         app: txtdot
     spec:
       containers:
-        - image: ghcr.io/txtdot/txtdot:latest
+        - image: ghcr.io/txtdot/txtdot@sha256:304ee916c01fd65fbb2171d5720d1bd2e9638af16fbfb0650cb631fc59f36d19
           name: txtdot
           ports:
             - containerPort: 8080

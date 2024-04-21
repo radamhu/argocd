@@ -20,7 +20,7 @@ spec:
         runAsUser: 0
       containers:
         - name: qbittorrent
-          image: lscr.io/linuxserver/qbittorrent:latest
+          image: lscr.io/linuxserver/qbittorrent@sha256:4d99ebfc407d06371e896dd5039e10fdd12b13642a0b32f068b093f46854c63b
           env:
             - name: PGID
               value: "0"
