@@ -1,4 +1,0 @@
-flask
-Flask
-redis
-gunicorn==20.0.4

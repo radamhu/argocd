@@ -1,4 +1,0 @@
-requests
-# Since you’re deploying to AWS Lambda, you’ll need to explicitly pin to urllib3<2 in your project to ensure urllib3 2.0 isn’t brought into your environment.
-urllib3<2
-pytz

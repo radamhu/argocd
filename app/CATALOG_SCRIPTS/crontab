@@ -1,1 +1,0 @@
-*/5 * * * * cd /app && /usr/local/bin/python /app/edc_lineage/lineage_mapping__evaweprddls_ingress_all__synapse_evaprdsynspallservice.py -sn Sheet1 -o .\temp -c https://edc-dev.zeiss.org:9086 >> /var/log/cron_log.log 2>&1
