@@ -16,7 +16,7 @@ spec:
         app: prowlarr
     spec:
       containers:
-        - image: linuxserver/prowlarr:latest
+        - image: linuxserver/prowlarr@sha256:c1f9e2e8339642b32c8c8679b4d89058f3985699760fc7bc4e187a99f8549e86
           name: prowlarr
           ports:
             - containerPort: 9696
