@@ -12,3 +12,31 @@ spec:
       port: 5000
       targetPort: 5000
   loadBalancerIP: 10.0.0.60
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: flaskdemo1
+  namespace: flaskdemo1
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    # cert-manager.io/cluster-issuer: letsencrypt-staging
+    # traefik.ingress.kubernetes.io/router.middlewares: default-my-basic-auth@kubernetescrd
+  labels:
+    app: flaskdemo1
+spec:
+  # tls:
+  #   - secretName: "{{ appname }}"-home-local-tls
+  #     hosts:
+  #       - "{{ appdomain }}"
+  rules:
+  - host: flaskdemo1.home.adaminformatika.hu
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: flaskdemo1
+              port:
+                number: 8191
