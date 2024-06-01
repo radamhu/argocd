@@ -1,17 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "configMigration": true,
   "extends": [
-    "config:base"
+    "config:recommended",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests",
+    ":pinDevDependencies",
+    ":dependencyDashboard"
   ],
-  "packageRules": [
+  "customManagers": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
-    {
-      "matchDepTypes": ["devDependencies"],
-      "automerge": true
+        "customType": "regex",
+        "fileMatch": [
+          "[^\s]-deployment.yaml$"
+        ],
+        "matchStrings": [
+          "\"image\":\\s\"(?<depName>[^:\"]+):(?<currentValue>[^@\"]+)(@(?<currentDigest>sha256:[a-f0-9]+))?\""
+        ],
+        "autoReplaceStringTemplate": "\"image\": \"{{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}\"",
+        "datasourceTemplate": "docker"
     }
-  ],
-  "platformAutomerge": true
+  ]
 }

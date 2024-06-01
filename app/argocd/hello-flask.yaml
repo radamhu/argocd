@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-flask
+spec:
+  destination:
+    namespace: hello-flask
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: app/hello-flask
+    repoURL: 'https://github.com/radamhu/argocd'
+    targetRevision: main
+  sources: []
+  project: default
+  syncPolicy:
+    automated: # Automated sync with 5 retries each one with a 5sec delay.
+      prune: true # Specifies if resources should be pruned during auto-syncing (false by default).
+      selfHeal: true  # Automatically try to fix any differences between the cluster's current state and the desired state defined in the Git repository (false by default).
+      allowEmpty: false # Allows deleting all application resources during automatic syncing (false by default).
+    syncOptions:
+      - Validate=false # disables re source validation
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground # Supported policies are background, foreground, and orphan.
+      - PruneLast=true # Prunes all the resources at once in the end
+      - ApplyOutOfSyncOnly=false
+      - Replace=true
+      - Prune=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 20s
+        factor: 2
+        maxDuration: 15m

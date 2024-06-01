@@ -27,7 +27,7 @@ ingress:
 pms:
   # The storage class to use when provisioning the pms config volume
   # this needs to be created manually, null will use the default
-  storageClassName: nfs
+  storageClassName: null
 
   # the volume size to provision for the PMS database
   configStorage: 2Gi
@@ -192,10 +192,12 @@ extraVolumeMounts: []
 
 
 # Optionally specify additional volumes for the pod.
-extraVolumes: []
-# extraVolumes:
-#   - name: some-volume-name
-#     emptyDir: {}
+#extraVolumes: []
+extraVolumes:
+  - name: nfs-vol
+    nfs:
+      server: 192.168.0.21 # IP to our NFS server
+      path: /media/ # The path to our NFS share # The exported directory
 
 extraContainers: []
 # extraContainers:
