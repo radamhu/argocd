@@ -185,7 +185,11 @@ extraEnv: {
 
 
 # Optionally specify additional volume mounts for the PMS and init containers.
-extraVolumeMounts: []
+extraVolumeMounts: 
+  - name: nfs-vol
+      nfs:
+        server: 192.168.0.21 # IP to our NFS server
+        path: /media/ # The path to our NFS share # The exported directory
 # extraVolumeMounts:
 #   - name: some-volume-name
 #     mountPath: /path/in/container
@@ -193,11 +197,6 @@ extraVolumeMounts: []
 
 # Optionally specify additional volumes for the pod.
 #extraVolumes: []
-extraVolumes:
-  - name: nfs-vol
-    nfs:
-      server: 192.168.0.21 # IP to our NFS server
-      path: /media/ # The path to our NFS share # The exported directory
 
 extraContainers: []
 # extraContainers:
