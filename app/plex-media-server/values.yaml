@@ -13,13 +13,13 @@ global:
 
 ingress:
   # Specify if an ingress resource for the pms server should be created or not
-  enabled: true
+  enabled: false
 
   # The ingress class that should be used
-  ingressClassName: "traefik"
+  ingressClassName: "ingress-nginx"
 
   # The url to use for the ingress reverse proxy to point at this pms instance
-  url: "plex.home.adaminformatika.hu"
+  url: ""
 
   # Custom annotations to put on the ingress resource
   annotations: {}
@@ -55,7 +55,7 @@ initContainer:
     registry: index.docker.io
     repository: alpine
     # If unset use latest
-    tag: 3.20.0
+    tag: 3.18.0
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -93,7 +93,7 @@ rclone:
     registry: index.docker.io
     repository: rclone/rclone
     # If unset use latest
-    tag: 1.66.0
+    tag: 1.62.2
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -108,7 +108,7 @@ rclone:
   remotes: []
 
   # if the remote volumes should be mounted as read only
-  readOnly: false
+  readOnly: true
 
   # additional arguments to give to rclone when mounting the volume
   additionalArgs: []
@@ -168,35 +168,33 @@ priorityClassName: ""
 # Common Labels for all resources created by this chart.
 commonLabels: {}
 
-extraEnv: {
-  PLEX_CLAIM: "claim-eP99T96ytgyfoqCoh6K7",
-  PLEX_UID: "0",
-  PLEX_GID: "0"
-}
+extraEnv: {}
 # extraEnv:
   # This claim is optional, and is only used for the first startup of PMS
   # The claim is obtained from https://www.plex.tv/claim/ is is only valid for a few minutes
+#   PLEX_CLAIM: "claim"
 #   HOSTNAME: "PlexServer"
 #   TZ: "Etc/UTC"
 #   PLEX_UPDATE_CHANNEL: "5"
+#   PLEX_UID: "uid of plex user"
+#   PLEX_GID: "group id of plex user"
   # a list of CIDRs that can use the server without authentication
   # this is only used for the first startup of PMS
 #   ALLOWED_NETWORKS: "0.0.0.0/0"
 
 
 # Optionally specify additional volume mounts for the PMS and init containers.
-extraVolumeMounts: 
-  - name: nfs-vol
-      nfs:
-        server: 192.168.0.21 # IP to our NFS server
-        path: /media/ # The path to our NFS share # The exported directory
+extraVolumeMounts: []
 # extraVolumeMounts:
 #   - name: some-volume-name
 #     mountPath: /path/in/container
 
 
 # Optionally specify additional volumes for the pod.
-#extraVolumes: []
+extraVolumes: []
+# extraVolumes:
+#   - name: some-volume-name
+#     emptyDir: {}
 
 extraContainers: []
 # extraContainers:
