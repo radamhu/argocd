@@ -1,7 +1,7 @@
 version: "3"
 services:
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest 
+    image: lscr.io/linuxserver/qbittorrent:latest@sha256:e46f9b5daf0435c24b238211c06b3fb669830a464ef2b8538328332ff48206a3 
     container_name: qbittorrent 
     hostname: qbittorrent 
     networks: 
