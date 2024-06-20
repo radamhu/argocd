@@ -1,0 +1,10 @@
+version: "3"
+services:
+  flaresolverr: 
+    image: ghcr.io/flaresolverr/flaresolverr:latest@sha256:0bdf9ed48f3c54c998bc160be46244ce3a88a7783b6cfd31eec9c1667786152f 
+    container_name: flaresolverr 
+    environment: 
+      - LOG_LEVEL=${LOG_LEVEL:-info} 
+      - LOG_HTML=${LOG_HTML:-false} 
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none} 
+    restart: unless-stopped 
