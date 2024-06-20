@@ -12,7 +12,7 @@
     {
         "customType": "regex",
         "fileMatch": [
-          "^app/([^/]+/)?-deployment\\.yaml$"
+          "^app/(.*)-deployment.yaml$"
         ],
         "matchStrings": [
           "\"image\":\\s\"(?<depName>[^:\"]+):(?<currentValue>[^@\"]+)(@(?<currentDigest>sha256:[a-f0-9]+))?\""
