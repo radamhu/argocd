@@ -1,7 +1,7 @@
 version: "3"
 services:
   plex:
-    image: plexinc/pms-docker
+    image: plexinc/pms-docker@sha256:55a784815837ea534c8caf95d586e838e37a608fc2c1017e3295802e7f62c354
     restart: unless-stopped
     container_name: plexms
     ports:

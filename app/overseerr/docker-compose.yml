@@ -1,7 +1,7 @@
 version: "3"
 services:
   overseerr:
-    image: lscr.io/linuxserver/overseerr:latest
+    image: lscr.io/linuxserver/overseerr:latest@sha256:a21b9f6cce4fa7040a32a9feb77a1902e792cd3716acf695ee416862dc22c6a4
     container_name: overseerr
     environment:
       - PUID=1000

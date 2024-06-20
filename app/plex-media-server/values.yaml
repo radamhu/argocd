@@ -3,7 +3,7 @@ image:
   registry: index.docker.io
   repository: plexinc/pms-docker
   # If unset use "latest"
-  tag: "latest"
+  tag: "latest@sha256:55a784815837ea534c8caf95d586e838e37a608fc2c1017e3295802e7f62c354"
   sha: ""
   pullPolicy: IfNotPresent
 
@@ -55,7 +55,7 @@ initContainer:
     registry: index.docker.io
     repository: alpine
     # If unset use latest
-    tag: 3.18.0
+    tag: 3.18.0@sha256:02bb6f428431fbc2809c5d1b41eab5a68350194fb508869a33cb1af4444c9b11
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -93,7 +93,7 @@ rclone:
     registry: index.docker.io
     repository: rclone/rclone
     # If unset use latest
-    tag: 1.62.2
+    tag: 1.62.2@sha256:a293da661307f1fb1a8f84e45c96c8a5db4af4a76f28d10ea2f4e48344e4eee3
     sha: ""
     pullPolicy: IfNotPresent
 
