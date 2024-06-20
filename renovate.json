@@ -1,30 +1,16 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "configMigration": true,
-  "dependencyDashboard": true,
+  "baseBranches": ["main", "devel", "longhorn"],
   "extends": [
-    "config:best-practices"
+    "config:recommended"
   ],
-  "labels": [
-    "ready for review"
-  ],
-  "automerge": true,
-  "ignoreTests": true,
+  "argocd": { "enabled": true },
+  "kubernetes": { "enabled": true },
+  "kustomize": { "enabled": true },
   "packageRules": [
     {
-      "description": "use fix scope for renovate updates",
-      "matchPackageNames": ["renovatebot/renovate"],
-      "semanticCommitType": "fix"
-    },
-    {
-      "description": "Automerge renovate updates",
-      "matchPackageNames": ["renovatebot/renovate"],
-      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchPackagePatterns": ["*"],
       "automerge": true
-    },
-    {
-      "packagePatterns": ["^lscr.io\\/linuxserver\\/"],
-      "versionScheme": "regex:^(?<compatibility>.*?)-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ]
 }
