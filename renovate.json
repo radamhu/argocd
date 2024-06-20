@@ -2,12 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "configMigration": true,
   "extends": [
-    "config:recommended",
-    "docker:pinDigests",
-    "helpers:pinGitHubActionDigests",
-    ":pinDevDependencies",
+    "config:best-practices",
     ":dependencyDashboard"
   ],
+  "labels": ["ready for review"],
+  "ignoreUnstable": true,
+  "stabilityDays": 7,
   "regexManagers": [
     {
       "datasourceTemplate": "docker",
