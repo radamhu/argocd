@@ -8,16 +8,16 @@
     ":pinDevDependencies",
     ":dependencyDashboard"
   ],
-  "customManagers": [
+  "regexManagers": [
     {
-        "customType": "regex",
-        "fileMatch": [
-          "^app/(.*)-deployment.yaml$"
-        ],
-        "matchStrings": [
-          "image: (.*)/(?<depName>.*?)/(?<currentValue>[^@]+)(@(?<currentDigest>sha256:[a-f0-9]+))?"
-        ],
-        "autoReplaceStringTemplate": "image: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}"
+      "datasourceTemplate": "docker",
+      "fileMatch": [
+        "^app/(.*)-deployment.yaml$"
+      ],
+      "matchStrings": [
+        "image: (.*)/(?<depName>.*?)/(?<currentValue>[^@]+)(@(?<currentDigest>sha256:[a-f0-9]+))?"
+      ],
+      "autoReplaceStringTemplate": "image: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}"
     }
   ]
 }
