@@ -93,7 +93,7 @@ rclone:
     registry: index.docker.io
     repository: rclone/rclone
     # If unset use latest
-    tag: 1.62.2@sha256:a293da661307f1fb1a8f84e45c96c8a5db4af4a76f28d10ea2f4e48344e4eee3
+    tag: 1.67.0@sha256:ec0f519fefc0d157b95ef30e230c0e945715e0235e4a868432622527f1d578f9
     sha: ""
     pullPolicy: IfNotPresent
 
