@@ -8,7 +8,7 @@
   "labels": ["ready for review"],
   "ignoreUnstable": true,
   "stabilityDays": 7,
-  "regexManagers": [
+  "customManagers": [
     {
       "datasourceTemplate": "docker",
       "fileMatch": [
