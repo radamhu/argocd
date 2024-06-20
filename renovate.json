@@ -15,9 +15,9 @@
           "^app/(.*)-deployment.yaml$"
         ],
         "matchStrings": [
-          "\"image\":\\s\"(?<depName>[^:\"]+):(?<currentValue>[^@\"]+)(@(?<currentDigest>sha256:[a-f0-9]+))?\""
+          "image: (.*)/(?<depName>.*?)/(?<currentValue>[^@]+)(@(?<currentDigest>sha256:[a-f0-9]+))?"
         ],
-        "autoReplaceStringTemplate": "\"image\": \"{{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}\"",
+        "autoReplaceStringTemplate": "image: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}",
         "datasourceTemplate": "docker"
     }
   ]
