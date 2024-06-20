@@ -7,5 +7,17 @@
     "helpers:pinGitHubActionDigests",
     ":pinDevDependencies",
     ":dependencyDashboard"
+  ],
+  "customManagers": [
+    {
+        "customType": "regex",
+        "fileMatch": [
+          "^app/(.*)-deployment.yaml$"
+        ],
+        "matchStrings": [
+          "image: (.*)/(?<depName>.*?)/(?<currentValue>[^@]+)(@(?<currentDigest>sha256:[a-f0-9]+))?"
+        ],
+        "autoReplaceStringTemplate": "image: {{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}"
+    }
   ]
 }
