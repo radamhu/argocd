@@ -7,7 +7,7 @@ resources:
 - qbittorrent-svc.yaml
 images:
 - name: lscr.io/linuxserver/qbittorrent
-  newTag: 4.6.5
+  newTag: 20.04.1
 labels:
 - includeSelectors: true
   pairs:
