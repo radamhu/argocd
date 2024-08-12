@@ -6,8 +6,8 @@ resources:
 - qbittorrent-pvc.yaml
 - qbittorrent-svc.yaml
 images:
-- name: qbittorrentofficial/qbittorrent-nox
-  newTag: 4.6.5-2
+- name: lscr.io/linuxserver/qbittorrent
+  newTag: 4.6.5
 labels:
 - includeSelectors: true
   pairs:

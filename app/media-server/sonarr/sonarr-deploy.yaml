@@ -21,7 +21,7 @@ spec:
         fsGroup: 0
         runAsUser: 0
       containers:
-        - image: lscr.io/linuxserver/sonarr
+        - image: pmialon/sonarr
           name: sonarr
           resources: {}
           volumeMounts:

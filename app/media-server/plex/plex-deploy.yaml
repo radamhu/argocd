@@ -22,7 +22,7 @@ spec:
         runAsUser: 0
       containers:
       - name: plex
-        image: plexinc/pms-docker:latest
+        image: plexinc/pms-docker
         imagePullPolicy: Always
         # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
         # resources:

@@ -21,7 +21,7 @@ spec:
         fsGroup: 0
         runAsUser: 0
       containers:
-        - image: linuxserver/radarr
+        - image: pmialon/radarr
           name: radarr
           imagePullPolicy: Always
           resources: {}
