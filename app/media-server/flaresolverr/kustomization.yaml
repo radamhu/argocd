@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - flaresolverr-deploy.yaml
 - flaresolverr-svc.yaml
+- flaresolverr-ing.yaml
 images:
 - name: ghcr.io/flaresolverr/flaresolverr
   newTag: v3.3.21

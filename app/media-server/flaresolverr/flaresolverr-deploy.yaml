@@ -30,4 +30,5 @@ spec:
         # resources:
         #   requests:
         #     cpu: ${PRIORITY_3_CPU_LIMIT:=65m}
-
+      restartPolicy: Always
+status: {}
