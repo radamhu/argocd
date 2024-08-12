@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- plex-deploy.yaml
+- plex-ing.yaml
+- plex-pvc.yaml
+- plex-svc.yaml
+- cors-middleware.yaml
+images:
+- name: plexinc/pms-docker
+  newTag: 1.40.4.8679-424562606
+labels:
+- includeSelectors: true
+  pairs:
+    app: plex

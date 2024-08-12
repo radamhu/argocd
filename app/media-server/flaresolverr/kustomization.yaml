@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- flaresolverr-deploy.yaml
+- flaresolverr-svc.yaml
+images:
+- name: ghcr.io/flaresolverr/flaresolverr
+  newTag: v3.3.21
+labels:
+- includeSelectors: true
+  pairs:
+    app: flaresolverr

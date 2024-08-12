@@ -4,7 +4,7 @@
   "extends": [
     "config:recommended"
   ],
-  "argocd": { "enabled": true },
+  "flux": { "enabled": true },
   "kubernetes": { "enabled": true },
   "kustomize": { "enabled": true },
   "packageRules": [
@@ -14,4 +14,3 @@
     }
   ]
 }
-

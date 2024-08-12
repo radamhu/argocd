@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+        - name: qbittorrent
+          image: lscr.io/linuxserver/qbittorrent
+          imagePullPolicy: Always
+          env:
+            - name: PGID
+              value: "0"
+            - name: PUID
+              value: "0"
+            - name: TZ
+              value: "Europe/Budapest"
+            - name: WEBUI_PORT
+              value: "8080"
+          resources: {}
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /downloads # The mountpoint inside the container
+              name: nfs-vol
+      restartPolicy: Always
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent
+        - name: nfs-vol
+          nfs:
+            server: 192.168.0.21 # IP to our NFS server
+            path: /media/ # The path to our NFS share # The exported directory
+status: {}

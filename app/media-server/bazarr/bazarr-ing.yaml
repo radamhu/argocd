@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: bazarr
+  namespace: media-server
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: bazarr.home.adaminformatika.hu
+    http:
+      paths:
+      - backend:
+          service:
+            name: bazarr
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - bazarr.home.adaminformatika.hu
+    secretName: bazarr.home.adaminformatika.hu

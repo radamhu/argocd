@@ -1,0 +1,64 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+      - name: plex
+        image: plexinc/pms-docker:latest
+        imagePullPolicy: Always
+        # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
+        # resources:
+        envFrom:
+        - configMapRef:
+            name: plex-env-vars
+        - secretRef:
+            name: plex-claim-token
+        env:
+        # kube-plex env vars
+        - name: PMS_INTERNAL_ADDRESS
+          value: http://kube.media-server.svc.cluster.local:32400
+        - name: PMS_IMAGE
+          value: "plexinc/pms-docker:latest"
+        - name: KUBE_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: TRANSCODE_PVC
+          value: "kube-plex-transcode"
+        - name: DATA_PVC
+          value: "kube-plex-data"
+        - name: CONFIG_PVC
+          value: "kube-plex-config"
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /downloads # The mountpoint inside the container
+          name: nfs-vol
+      restartPolicy: Always
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: plex
+      - name: nfs-vol
+        nfs:
+          server: 192.168.0.21 # IP to our NFS server
+          path: /media/ # The path to our NFS share # The exported directory
+status: {}

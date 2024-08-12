@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prowlarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prowlarr
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+      - image: pmialon/prowlarr
+        imagePullPolicy: Always
+        name: prowlarr
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /downloads # The mountpoint inside the container
+          name: nfs-vol
+        # resources:
+        #   limits:
+        #     cpu: ${PRIORITY_3_CPU_LIMIT:=65m}
+        #   requests:
+        #     cpu: ${PRIORITY_3_CPU_LIMIT:=65m}
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: prowlarr
+      - name: nfs-vol
+        nfs:
+          server: 192.168.0.21 # IP to our NFS server
+          path: /media/ # The path to our NFS share # The exported directory
+status: {}

@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- torrents-ingress.yaml
+- qbittorrent-deploy.yaml
+- qbittorrent-pvc.yaml
+- qbittorrent-svc.yaml
+images:
+- name: qbittorrentofficial/qbittorrent-nox
+  newTag: 4.6.4-2
+labels:
+- includeSelectors: true
+  pairs:
+    app: qbittorrent
