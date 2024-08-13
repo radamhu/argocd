@@ -9,3 +9,7 @@
 # optional helm chart source
 - https://github.com/bjw-s/helm-charts
 
+# argocd
+```bash
+argocd app create plex-media-server -f app/argocd/plex-media-server.yaml
+```
