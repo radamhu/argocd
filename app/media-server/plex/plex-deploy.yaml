@@ -22,32 +22,34 @@ spec:
         runAsUser: 0
       containers:
       - name: plex
-        image: plexinc/pms-docker
+        image: linuxserver/plex
         imagePullPolicy: Always
         # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
-        # resources:
-        envFrom:
-        - configMapRef:
-            name: plex-env-vars
-        - secretRef:
-            name: plex-claim-token
+        resources: {}
+        # envFrom:
+        # - configMapRef:
+        #     name: plex-env-vars
+        # - secretRef:
+        #     name: plex-claim-token
         env:
-        # kube-plex env vars
-        - name: PMS_INTERNAL_ADDRESS
-          value: http://kube.media-server.svc.cluster.local:32400
-        - name: PMS_IMAGE
-          value: "plexinc/pms-docker:latest"
-        - name: KUBE_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: TRANSCODE_PVC
-          value: "kube-plex-transcode"
-        - name: DATA_PVC
-          value: "kube-plex-data"
-        - name: CONFIG_PVC
-          value: "kube-plex-config"
+          # Optionally you can obtain a claim token from https://plex.tv/claim⁠
+          # value must not contain ""
+        - name: PLEX_CLAIM
+          value: claim-pNDzJST5pDkeaqBLQSza
+        - name: HOSTNAME
+          value: "k8sPlex"
+        - name: VERSION
+          value: "docker"
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        # scenario 1 : 1st deplyo failed due to permissione denieud --> apply chown
+        # scenraio 2 : delete Plex folder from claimdisk, only keep 777 permission folder
+        # Error in command line:the argument for option '--serverUuid' should follow immediately after the equal sign
+        # CLAIM problem ?
         volumeMounts:
+        # Plex library location. This can grow very large, 50gb+ is likely for a large collection.
         - mountPath: /config
           name: config
         - mountPath: /downloads # The mountpoint inside the container
