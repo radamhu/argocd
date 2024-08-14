@@ -6,8 +6,8 @@ resources:
 #- streetmerchant-pvc.yaml
 - streetmerchant-svc.yaml
 images:
-- name: ghcr.io/jef/streetmerchant.io
-  newTag: 3.9.0
+- name: ghcr.io/jef/streetmerchant
+  newTag: cca68ba
 labels:
 - includeSelectors: true
   pairs:

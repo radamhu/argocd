@@ -22,7 +22,7 @@ spec:
         runAsUser: 0
       containers:
       - name: streetmerchant
-        image: ghcr.io/jef/streetmerchant.io
+        image: ghcr.io/jef/streetmerchant
         imagePullPolicy: Always
         # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
         # resources:
