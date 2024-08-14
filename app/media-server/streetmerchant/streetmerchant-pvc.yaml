@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: changedetection
+  name: streetmerchant
   labels:
     type: datastore
 spec:
