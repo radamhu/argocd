@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: changedetection
+  namespace: media-server
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: changedetection.home.adaminformatika.hu
+    http:
+      paths:
+      - backend:
+          service:
+            name: changedetection
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - changedetection.home.adaminformatika.hu
+    secretName: changedetection.home.adaminformatika.hu
