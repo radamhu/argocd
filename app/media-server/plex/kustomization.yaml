@@ -8,7 +8,7 @@ resources:
 - cors-middleware.yaml
 images:
 - name: linuxserver/plex
-  newTag: 1.40.4
+  newTag: 1.40.5
 labels:
 - includeSelectors: true
   pairs:
