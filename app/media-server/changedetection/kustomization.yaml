@@ -6,7 +6,7 @@ resources:
 - changedetection-pvc.yaml
 - changedetection-svc.yaml
 images:
-- name: dgtlmoon/changedetection.io
+- name: ghcr.io/dgtlmoon/changedetection.io
   newTag: 1.4.3
 labels:
 - includeSelectors: true

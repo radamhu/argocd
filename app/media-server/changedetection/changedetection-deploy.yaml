@@ -22,7 +22,7 @@ spec:
         runAsUser: 0
       containers:
       - name: changedetection
-        image: dgtlmoon/changedetection.io
+        image: ghcr.io/dgtlmoon/changedetection.io
         imagePullPolicy: Always
         # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
         # resources:
