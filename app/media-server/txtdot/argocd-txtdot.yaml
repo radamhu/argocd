@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: plex
+  name: txtdot
 spec:
   destination:
     namespace: media-server
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/media-server/plex
+    path: app/media-server/txtdot
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []
@@ -36,4 +36,4 @@ spec:
   ignoreDifferences:
   - kind: "Deployment"
     jsonPointers:
-      - /spec/containers/volumeMounts
+      - /spec/containers/volumes

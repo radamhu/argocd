@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: plex
+  name: flaresolverr
 spec:
   destination:
     namespace: media-server
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/media-server/plex
+    path: app/media-server/flaresolverr
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []
@@ -33,7 +33,7 @@ spec:
         duration: 20s
         factor: 2
         maxDuration: 15m
-  ignoreDifferences:
-  - kind: "Deployment"
-    jsonPointers:
-      - /spec/containers/volumeMounts
+  # ignoreDifferences:
+  # - kind: "Deployment"
+  #   jsonPointers:
+  #     - /spec/containers/volumeMounts
