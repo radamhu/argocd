@@ -31,7 +31,7 @@ spec:
         #   requests:
         #     memory: 150
         volumeMounts:
-        - mountPath: /config
+        - mountPath: /root/.config/flexget
           name: config
       restartPolicy: Always
       volumes:
