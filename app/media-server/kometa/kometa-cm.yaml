@@ -1,0 +1,99 @@
+apiVersion: v1
+data:
+  config.yml: |
+    libraries:
+      Movies:
+        collection_files:
+          - file: config/movies.yaml
+      TV Shows:
+        collection_files:
+          - file: config/tv.yaml
+    settings:
+      cache: true
+      cache_expiration: 60
+      asset_directory: config/assets
+      asset_folders: true
+      asset_depth: 0
+      create_asset_folders: false
+      dimensional_asset_rename: false
+      download_url_assets: false
+      show_missing_season_assets: false
+      sync_mode: append
+      minimum_items: 1
+      default_collection_order:
+      delete_below_minimum: true
+      delete_not_scheduled: false
+      run_again_delay: 2
+      missing_only_released: false
+      only_filter_missing: false
+      show_unmanaged: true
+      show_filtered: false
+      show_options: false
+      show_missing: true
+      show_missing_assets: true
+      save_report: true
+      tvdb_language: eng
+      ignore_ids:
+      ignore_imdb_ids:
+      playlist_sync_to_users: all
+      verify_ssl: true
+    plex:
+      url: http://192.168.0.179:32400
+      token: GkGw_d27ces2mkK7cyP4
+      timeout: 60
+      db_cache:
+      clean_bundles: false
+      empty_trash: false
+      optimize: false
+    tmdb:
+      apikey: 67267d4dead7501797fe79bfd0fae514
+      language: en
+    tautulli:
+      url: http://tautulli.home.adaminformatika.hu
+      apikey: b4753ab1724e4016b82ad7f4bbbc0bc5
+    omdb:
+      # find API key in mail_inbox
+      apikey: 57737db4
+    radarr:
+      url: http://radarr.home.adaminformatika.hu/
+      token: 381038323bea4e54965e414e1ca65228
+      add_missing: false
+      root_folder_path: /downloads/adult
+      monitor: false
+      availability: cinemas
+      quality_profile: HD - 720p
+      tag: kometa
+      add_existing: false
+      search: false
+      radarr_path:
+      plex_path:
+    sonarr:
+      url: http://sonarr.home.adaminformatika.hu/
+      token: 7621a07a286649f0b6436e9b0397c7ea
+      add_missing: false
+      add_existing: false
+      root_folder_path: /downloads/tv
+      monitor: pilot
+      quality_profile: HD - 720p
+      language_profile: English
+      series_type: standard
+      season_folder: true
+      tag: kometa
+      search: true
+      cutoff_search: false
+      sonarr_path:
+      plex_path:
+    trakt:
+      client_id: 46b166c395cea8693ca6a4b7c26799b0069c396e5393b95ea042cd00a78a81d2
+      client_secret: 2d8f4fabfd29152e17b2a2451e2729205db0831565b6dd230b081cf01a4328ae
+      authorization:
+          access_token: YOUR_ACCESS_TOKEN_HERE
+          token_type: Bearer
+          expires_in: 7889237
+          refresh_token: YOUR_REFERSH_TOKEN_HERE
+          scope: public
+          created_at: 1642462048
+kind: ConfigMap
+metadata:
+  name: kometa-config
+  namespace: media-server

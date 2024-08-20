@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- kometa-cronjob.yaml
+- kometa-pvc.yaml
+- kometa-cm.yaml
+- kometa-movie-cm.yaml
+- kometa-tv-cm.yaml
+images:
+- name: ghcr.io/linuxserver/kometa
+  newTag: 2.0.2
+labels:
+- includeSelectors: true
+  pairs:
+    app: kometa
