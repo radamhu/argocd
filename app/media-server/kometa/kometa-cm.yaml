@@ -2,12 +2,9 @@ apiVersion: v1
 data:
   config.yml: |
     libraries:
-      Movies:
+      adult:
         collection_files:
           - file: config/movies.yaml
-      TV Shows:
-        collection_files:
-          - file: config/tv.yaml
     settings:
       cache: true
       cache_expiration: 60
@@ -38,7 +35,7 @@ data:
       playlist_sync_to_users: all
       verify_ssl: true
     plex:
-      url: http://192.168.0.179:32400
+      url: http://192.168.0.179
       token: GkGw_d27ces2mkK7cyP4
       timeout: 60
       db_cache:
