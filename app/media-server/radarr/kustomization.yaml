@@ -9,7 +9,7 @@ images:
 - name: pmialon/backup-manager
   newTag: 0.7.14-1.3
 - name: pmialon/radarr
-  newTag: 5.8.3.8933
+  newTag: 5.9.1.9070
 labels:
 - includeSelectors: true
   pairs:
