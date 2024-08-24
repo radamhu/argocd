@@ -38,8 +38,10 @@ spec:
         env:
           # Optionally you can obtain a claim token from https://plex.tv/claim⁠
           # value must not contain ""
+        - name: ADVERTISE_IP
+          value: http://192.168.0.179/
         - name: PLEX_CLAIM
-          value: claim-pNDzJST5pDkeaqBLQSza
+          value: claim-jYAPqrcCcT8yBirwweL7
         - name: HOSTNAME
           value: "k8sPlex"
         - name: VERSION
