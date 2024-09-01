@@ -24,14 +24,23 @@ config:
         href: https://192.168.0.10:8006
         icon: proxmox.svg
         weight: 41
+    - "Grafana":
+        description: Grafana
+        href: https://adaminfo.grafana.net/
+        icon: grafana.svg
+        weight: 42
   - Media:
     - Plex:
         app: plex
         description: Media Center
         href: https://app.plex.tv/desktop
         icon: plex.svg
-        namespace: media
+        namespace: media-server
         weight: 1
+        widget:
+          type: tautulli
+          url: http://172.16.1.1:8181
+          key: aabbccddeeffgghhiijjkkllmmnnoo
   settings:
     color: neutral
     hideVersion: true
