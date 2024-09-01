@@ -33,7 +33,16 @@ spec:
               value: "Europe/Budapest"
             - name: WEBUI_PORT
               value: "8080"
-          resources: {}
+          resources: {
+            limits: {
+              memory: "1024M",
+              cpu: "500m"
+            },
+            requests: {
+              memory: "256M",
+              cpu: "250m"
+            }
+          }
           volumeMounts:
             - mountPath: /config
               name: config
