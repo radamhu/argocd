@@ -25,11 +25,11 @@ spec:
         image: pmialon/bazarr
         imagePullPolicy: Always
         # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
-        # resources:
-        #   limits:
-        #     memory: 300
-        #   requests:
-        #     memory: 150
+        resources:
+          limits: # you restrict the maximum amount of memory available to the pods 
+            memory: "1Gi"
+          requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+            memory: "256Mi"
         volumeMounts:
         - mountPath: /config
           name: config

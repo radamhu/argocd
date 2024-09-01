@@ -11,5 +11,7 @@
 
 # argocd
 ```bash
+argocd login argocd.home.adaminformatika.hu --username  --password
+
 echo -n "Enter ARGOCD_APP_NAME: "; read ARGOCD_APP_NAME; argocd app create $ARGOCD_APP_NAME -f "app/media-server/$ARGOCD_APP_NAME/argocd-$ARGOCD_APP_NAME.yaml" --upsert
 ```
