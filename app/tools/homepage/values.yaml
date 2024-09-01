@@ -72,14 +72,14 @@ ingress:
       cert-manager.io/cluster-issuer: letsencrypt
     enabled: true
     hosts:
-    - host: home.wagner.gg
+    - host: dashboard.home.adaminformatika.hu
       paths:
       - path: /
-    ingressClassName: nginx-private
+    ingressClassName: traefik
     tls:
     - hosts:
-      - home.wagner.gg
-      secretName: home.wagner.gg
+      - dashboard.home.adaminformatika.hu
+      secretName: dashboard.home.adaminformatika.hu
 
 enableRbac: true
 

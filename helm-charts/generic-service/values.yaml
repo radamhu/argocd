@@ -1,0 +1,126 @@
+image:
+  repository: ""
+  pullPolicy: IfNotPresent
+  tag: ""
+
+serviceAccount:
+  annotations: {}
+
+podLabels: {}
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+hostNetwork: false
+
+ports: []
+# - name: ""
+#   containerPort: 0
+#   protocol: TCP
+
+health:
+  enabled: true
+  startupProbeSeconds: 30
+  port: main
+  type: HTTP
+  path: /
+
+ingress:
+  host: ""
+  path: /
+  public: false
+  publicPath: /
+  port: main
+  annotations: {}
+
+replicas: 1
+strategyType: Recreate
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+terminationGracePeriodSeconds: 30
+
+command: []
+args: []
+
+envs: []
+
+secretEnvs: []
+
+configMaps: []
+# - name: ""
+#   defaultMode: 0644
+#   mountPath: ""
+#   subPath: ""
+#   content: ""
+
+hostPaths: []
+# - name: ""
+#   hostPath: ""
+#   containerPath: ""
+#   readOnly: false
+#   type: "DirectoryOrCreate"
+
+envsubst:
+  image:
+    repository: nixery.dev/shell/envsubst
+    tag: "latest@sha256:b7512ed489cbb95aa9e88f2fd0363a073bc512c9b890b48e466918be09e6b8ed"
+  files: []
+  # - src:
+  #   dest:
+
+database:
+  enabled: false
+  resources: {}
+  hostPath: ""
+  rootPassword: ""
+  userPassword: ""
+  type: mariadb
+  mariadb:
+    image:
+      repository: mariadb
+      tag: "11.5.2@sha256:4b812bbd9a025569fbe5a7a70e4a3cd3af53aa36621fecb1c2e108af2113450a"
+    backup:
+      schedule: "0 4 * * *"
+      image:
+        repository: fradelg/mysql-cron-backup
+        tag: "latest@sha256:5f4705fc80f3d75e8d7460e44ad27c122d4345e14f69a9c95cc0831399028325"
+  postgresql:
+    image:
+      repository: postgres
+      tag: "16.4@sha256:c62fdb7fd6f519ef425c54760894c74e8d0cb04fbf4f7d3d79aafd86bae24edd"
+    backup:
+      schedule: "0 4 * * *"
+      image:
+        repository: prodrigestivill/postgres-backup-local
+        tag: "16@sha256:f873bbfb406db633ab879628b11ef8092279639c467a2ea5f5bfa08b776252fb"
+
+helper:
+  image:
+    repository: busybox
+    tag: "1.36.1@sha256:9ae97d36d26566ff84e8893c64a6dc4fe8ca6d1144bf5b87b2b85a32def253c7"
+
+homepage:
+  name: ""
+  description: ""
+  group: ""
+  icon: ""
+  weight: 50
+  widgetType: ""
