@@ -23,6 +23,13 @@ spec:
       containers:
       - image: pmialon/prowlarr
         imagePullPolicy: Always
+        resources:
+          limits: # you restrict the maximum amount of memory available to the pods
+            memory: "512M"
+            cpu: "500m"
+          requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+            memory: "256M"
+            cpu: "256m"
         name: prowlarr
         volumeMounts:
         - mountPath: /config
