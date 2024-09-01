@@ -6,4 +6,5 @@ resources:
 # - k3s
 # - k3s-media-server-gitrepo.yaml
 # - k3s-media-server-ks.yaml
+- tools
 - media-server

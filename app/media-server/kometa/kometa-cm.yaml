@@ -35,8 +35,8 @@ data:
       playlist_sync_to_users: all
       verify_ssl: true
     plex:
-      url: http://192.168.0.179
-      token: GkGw_d27ces2mkK7cyP4
+      url:  http://192.168.0.21:32400
+      token: claim-EceMdofBVUJVzKGYtg2_
       timeout: 60
       db_cache:
       clean_bundles: false
