@@ -23,7 +23,13 @@ spec:
       containers:
         - image: pmialon/sonarr
           name: sonarr
-          resources: {}
+          resources:
+            limits: # you restrict the maximum amount of memory available to the pods
+              memory: "1024M"
+              cpu: "500m"
+            requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+              memory: "256M"
+              cpu: "250m"
           volumeMounts:
             - mountPath: /config
               name: config
