@@ -4,6 +4,16 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Media Server
+    gethomepage.dev/group: Media
+    gethomepage.dev/icon: bazarr.png
+    gethomepage.dev/name: Bazarr
+    gethomepage.dev/widget.type: "Bazarr"
+    gethomepage.dev/widget.url: "http://bazarr.home.adaminformatika.hu/"
+    gethomepage.dev/pod-selector: ""
+    gethomepage.dev/weight: 10 # optional
+    gethomepage.dev/instance: "public" # optional
   name: bazarr
   namespace: media-server
 spec:
