@@ -7,7 +7,7 @@ spec:
     namespace: tools
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/tools/homepage/charts/
+    path: app/tools/homepage/charts/homepage
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []

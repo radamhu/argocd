@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# make sure argpcd cm is modified
+resources:
+- argocd-cm.yaml
+
+# helmCharts:
+# - repo: https://jameswynn.github.io/helm-charts
+#   name: homepage
+#   version: 2.0.1
+#   releaseName: homepage
+#   valuesFile: values.yaml
+#   namespace: tools
+
+# Bitnami NGINX helm chart
+helmChartInflationGenerator:
+- chartName: homepage
+  chartRepoUrl: https://jameswynn.github.io/helm-charts
+  chartVersion: 2.0.1
+  releaseName: homepage
+  releaseNamespace: tools
+  # override with these custom values
+  values: values.yaml
