@@ -1,151 +1,115 @@
 image:
-  repository: ghcr.io/gethomepage/homepage
-  # tag: v0.6.0
+  repository: "ghcr.io/gethomepage/homepage"
+  tag: "v0.9.6@sha256:e5b2616d17db8961a53c0b7d389d812d31c265d35696d475732f53278c9276f7"
 
-# Enable RBAC. RBAC is necessary to use Kubernetes integration
-enableRbac: false
+config:
+  bookmarks: {}
+  kubernetes:
+    mode: cluster
+    cluster:
+      # Shows the cluster node
+      show: true
+      # Shows the aggregate CPU stats
+      cpu: true
+      # Shows the aggregate memory stats
+      memory: true
+      # Shows a custom label
+      showLabel: true
+      label: "cluster"
+    nodes:
+      # Shows the clusters
+      show: true
+      # Shows the CPU for each node
+      cpu: true
+      # Shows the memory for each node
+      memory: true
+      # Shows the label, which is always the node name
+      showLabel: true
+  services:
+  - Network:
+    - FritzBox:
+        description: Router
+        href: http://192.168.0.1
+        icon: avmfritzbox.svg
+        weight: 1
+    - AdGuard Home:
+        description: Phihole
+        href: http://192.168.0.12
+        icon: adguard-home.svg
+        weight: 2
+  - Server:
+    - "PVE01":
+        description: Promox Web UI
+        href: https://192.168.0.10:8006
+        icon: proxmox.svg
+        weight: 41
+    - "Grafana":
+        description: Grafana
+        href: https://adaminfo.grafana.net/
+        icon: grafana.svg
+        weight: 42
+  - Media:
+    - Plex:
+        app: plex
+        namespace: media-server
+        description: Media Center
+        href: https://app.plex.tv/desktop
+        icon: plex.svg
+        weight: 1
+        widget:
+          type: tautulli
+          url: http://172.16.1.1:8181
+          key: aabbccddeeffgghhiijjkkllmmnnoo
+  settings:
+    color: neutral
+    hideVersion: true
+    iconStyle: theme
+    layout:
+    - Cloud:
+        icon: mdi-cloud
+    - Organization:
+        icon: mdi-file-document-multiple-outline
+    - Smart Home:
+        icon: mdi-home-outline
+    - Network:
+        icon: mdi-lan
+    - Media:
+        icon: mdi-filmstrip-box
+    - Indexer:
+        icon: mdi-download-multiple
+    - Downloader:
+        icon: mdi-download-outline
+    - Server:
+        icon: mdi-server
+    target: _self
+    theme: dark
+    title: Homelab
+  widgets:
+  - resources:
+      backend: resources
+      cpu: true
+      expanded: true
+      memory: true
+  - search:
+      provider: google
+      target: _blank
 
-extraClusterRoles:
-  # - apiGroups:
-  #   - some-group
-  #   resources:
-  #   - some-resource
-  #   verbs:
-  #   - get
-
-serviceAccount:
-  # Specify a different service account name. When blank it will default to the release
-  # name if *create* is enabled, otherwise it will refer to the default service account.
-  name: ""
-  # Create service account. Needed when RBAC is enabled.
-  create: false
-
-service:
-  main:
-    ports:
-      http:
-        port: 3000
-
-controller:
-  strategy: RollingUpdate
-  rollingUpdate:
-    maxSurge: 25%
-    maxUnavailable: 25%
-
-# Enable the ingress to expose Homepage to the network.
 ingress:
   main:
-    enabled: false
-    # labels:
-    #   # This label will enable discover of this deployment in Homepage
-    #   gethomepage.dev/enabled: "true"
-    # annotations:
-    #   # These annotations will configure how this deployment is shown in Homepage
-    #   gethomepage.dev/name: "Homepage"
-    #   gethomepage.dev/description: "A modern, secure, highly customizable application dashboard."
-    #   gethomepage.dev/group: "A New Group"
-    #   gethomepage.dev/icon: "homepage.png"
-    # ingressClassName: "nginx"
-    # hosts:
-    #   - host: &host "homepage.local"
-    #     paths:
-    #       - path: /
-    #         pathType: Prefix
-    # tls:
-    #   - hosts:
-    #       - *host
-
-# All the config files for Homepage can be specified under their relevant config block.
-config:
-  # To use an existing ConfigMap uncomment this line and specify the name
-  # useExistingConfigMap: existing-homepage-configmap
-  bookmarks:
-    - Developer:
-        - Github:
-            - abbr: GH
-              href: https://github.com/
-  services:
-    - My First Group:
-        - My First Service:
-            href: http://localhost/
-            description: Homepage is awesome
-
-    - My Second Group:
-        - My Second Service:
-            href: http://localhost/
-            description: Homepage is the best
-
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 😎
-  widgets:
-    - resources:
-        # change backend to 'kubernetes' to use Kubernetes integration. Requires RBAC.
-        backend: resources
-        expanded: true
-        cpu: true
-        memory: true
-    - search:
-        provider: duckduckgo
-        target: _blank
-    ## Uncomment to enable Kubernetes integration
-    # - kubernetes:
-    #     cluster:
-    #       show: true
-    #       cpu: true
-    #       memory: true
-    #       showLabel: true
-    #       label: "cluster"
-    #     nodes:
-    #       show: true
-    #       cpu: true
-    #       memory: true
-    #       showLabel: true
-  kubernetes:
-    # change mode to 'cluster' to use RBAC service account
-    mode: disable
-  docker:
-  settings:
-
-# -- Main environment variables. Template enabled.
-# Syntax options:
-# A) TZ: UTC
-# B) PASSWD: '{{ .Release.Name }}'
-# C) PASSWD:
-#      configMapKeyRef:
-#        name: config-map-name
-#        key: key-name
-# D) PASSWD:
-#      valueFrom:
-#        secretKeyRef:
-#          name: secret-name
-#          key: key-name
-#      ...
-# E) - name: TZ
-#      value: UTC
-# F) - name: TZ
-#      value: '{{ .Release.Name }}'
-env:
-
-# To include environment variables from other configs or other secrets for use in
-# Homepage's variable substitutions. Refer to them here.
-# envFrom:
-#   - secretRef:
-#       name: my-secret
-#   - configMapRef:
-#       name: my-configmap
-
-persistence:
-  logs:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
     enabled: true
-    type: emptyDir
-    mountPath: /app/config/logs
+    hosts:
+    - host: dashboard.home.adaminformatika.hu
+      paths:
+      - path: /
+    ingressClassName: traefik
+    tls:
+    - hosts:
+      - dashboard.home.adaminformatika.hu
+      secretName: dashboard.home.adaminformatika.hu
 
-# resources:
-#   requests:
-#     memory: 10Mi
-#     cpu: 10m
-#   limits:
-#     memory: 200Mi
-#     cpu: 500m
+enableRbac: true
+
+serviceAccount:
+  create: true
