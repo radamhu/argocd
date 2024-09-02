@@ -7,12 +7,13 @@ spec:
     namespace: tools
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/tools/homepage/
+    path: app/tools/homepage
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
     helm:
+      releaseName: homepage
       valueFiles:
-        - values.yaml
+      - values.yaml
   project: default
   syncPolicy:
     automated: # Automated sync with 5 retries each one with a 5sec delay.
