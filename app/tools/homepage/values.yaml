@@ -6,6 +6,25 @@ config:
   bookmarks: {}
   kubernetes:
     mode: cluster
+    cluster:
+      # Shows the cluster node
+      show: true
+      # Shows the aggregate CPU stats
+      cpu: true
+      # Shows the aggregate memory stats
+      memory: true
+      # Shows a custom label
+      showLabel: true
+      label: "cluster"
+    nodes:
+      # Shows the clusters
+      show: true
+      # Shows the CPU for each node
+      cpu: true
+      # Shows the memory for each node
+      memory: true
+      # Shows the label, which is always the node name
+      showLabel: true
   services:
   - Network:
     - FritzBox:
@@ -32,10 +51,10 @@ config:
   - Media:
     - Plex:
         app: plex
+        namespace: media-server
         description: Media Center
         href: https://app.plex.tv/desktop
         icon: plex.svg
-        namespace: media-server
         weight: 1
         widget:
           type: tautulli
