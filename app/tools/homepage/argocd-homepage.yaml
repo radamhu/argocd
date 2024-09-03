@@ -36,8 +36,8 @@ spec:
         duration: 20s
         factor: 2
         maxDuration: 15m
-  ignoreDifferences:
-  - kind: "Deployment"
-    jsonPointers:
-      - /spec/containers/volumes
+  # ignoreDifferences:
+  # - kind: "Deployment"
+  #   jsonPointers:
+  #     - /spec/containers/volumes
 
