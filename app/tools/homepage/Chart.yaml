@@ -6,7 +6,7 @@ icon: https://github.com/gethomepage/homepage/blob/main/public/mstile-150x150.pn
 version: 0.0.1
 appVersion: v0.0.1
 dependencies:
-  - name: jameswynn/homepage
+  - name: homepage
     repository: https://jameswynn.github.io/helm-charts
     version: v0.9.6
 
