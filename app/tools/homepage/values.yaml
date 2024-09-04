@@ -59,7 +59,7 @@ ingress:
             gethomepage.dev/group: "Dynamic"
             gethomepage.dev/icon: "homepage.png"
         ingressClassName: "traefik"
-        namespace: "tools"
+        namespace: tools
         hosts:
           - host: &host "dashboard.home.adaminformatika.hu"
             paths:
