@@ -1,107 +1,107 @@
-image:
-  repository: "ghcr.io/gethomepage/homepage"
-  tag: "v0.9.6@sha256:e5b2616d17db8961a53c0b7d389d812d31c265d35696d475732f53278c9276f7"
+homepage:
+  image:
+    repository: "ghcr.io/gethomepage/homepage"
+    tag: "v0.9.6@sha256:e5b2616d17db8961a53c0b7d389d812d31c265d35696d475732f53278c9276f7"
 
-config:
-  bookmarks:
-    - Developer:
-        - Github:
-            - abbr: GH
-              href: https://github.com/
-  services:
-  - Network:
-      - Router:
-          description: Router
-          href: http://192.168.0.1
-          icon: avmfritzbox.svg
-          weight: 1
-      - AdGuard Home:
-          description: DNS Server
-          href: http://192.168.0.12
-          icon: adguard-home.svg
-          weight: 2
-  - Server:
-    - Portainer:
-        description: Container Management
-        href: https://localhost:9443
-        icon: portainer.svg
-        weight: 30
-    - "Proxmox Node 1":
-        description: Promox Web UI
-        # TODO use .31 IP
-        href: https://192.168.0.10:8006
-        icon: proxmox.svg
-        weight: 41
-  settings:
-    color: neutral
-    hideVersion: true
-    iconStyle: theme
-    layout:
-    - Cloud:
-        icon: mdi-cloud
-    - Organization:
-        icon: mdi-file-document-multiple-outline
-    - Smart Home:
-        icon: mdi-home-outline
+  config:
+    bookmarks:
+      - Developer:
+          - Github:
+              - abbr: GH
+                href: https://github.com/
+    services:
     - Network:
-        icon: mdi-lan
-    - Media:
-        icon: mdi-filmstrip-box
-    - Indexer:
-        icon: mdi-download-multiple
-    - Downloader:
-        icon: mdi-download-outline
+        - Router:
+            description: Router
+            href: http://192.168.0.1
+            icon: avmfritzbox.svg
+            weight: 1
+        - AdGuard Home:
+            description: DNS Server
+            href: http://192.168.0.12
+            icon: adguard-home.svg
+            weight: 2
     - Server:
-        icon: mdi-server
-    target: _self
-    theme: dark
-    title: Homelab
-  widgets:
-      # show the kubernetes widget, with the cluster summary and individual nodes
-    - kubernetes:
-        cluster:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-          label: "cluster"
-        nodes:
-          show: true
-          cpu: true
-          memory: true
-          showLabel: true
-    - search:
-        provider: google
-        target: _blank
-  kubernetes:
-      mode: cluster
+      - Portainer:
+          description: Container Management
+          href: https://localhost:9443
+          icon: portainer.svg
+          weight: 30
+      - "Proxmox Node 1":
+          description: Promox Web UI
+          href: https://192.168.0.10:8006
+          icon: proxmox.svg
+          weight: 41
+    settings:
+      color: neutral
+      hideVersion: true
+      iconStyle: theme
+      layout:
+      - Cloud:
+          icon: mdi-cloud
+      - Organization:
+          icon: mdi-file-document-multiple-outline
+      - Smart Home:
+          icon: mdi-home-outline
+      - Network:
+          icon: mdi-lan
+      - Media:
+          icon: mdi-filmstrip-box
+      - Indexer:
+          icon: mdi-download-multiple
+      - Downloader:
+          icon: mdi-download-outline
+      - Server:
+          icon: mdi-server
+      target: _self
+      theme: dark
+      title: Homelab
+    widgets:
+        # show the kubernetes widget, with the cluster summary and individual nodes
+      - kubernetes:
+          cluster:
+            show: true
+            cpu: true
+            memory: true
+            showLabel: true
+            label: "cluster"
+          nodes:
+            show: true
+            cpu: true
+            memory: true
+            showLabel: true
+      - search:
+          provider: google
+          target: _blank
+    kubernetes:
+        mode: cluster
 
-# The service account is necessary to allow discovery of other services
-serviceAccount:
-    name: "homepage"
-    create: true
+  # The service account is necessary to allow discovery of other services
+  serviceAccount:
+      name: "homepage"
+      create: true
 
-# This enables the service account to access the necessary resources
-enableRbac: true
+  # This enables the service account to access the necessary resources
+  enableRbac: true
 
-service:
-  main:
-    ports:
-      http:
-        port: 3000
+  service:
+    main:
+      ports:
+        http:
+          port: 3000
 
-ingress:
-  main:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-    enabled: true
-    hosts:
-    - host: &host "dashboard.home.adaminformatika.hu"
-      paths:
-      - path: /
-    ingressClassName: traefik
-    tls:
-    - hosts:
-      - *host
-      secretName: *host
+  ingress:
+    main:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt
+      enabled: true
+      hosts:
+      - host: &host "dashboard.home.adaminformatika.hu"
+        paths:
+        - path: /
+      ingressClassName: traefik
+      tls:
+      - hosts:
+        - *host
+        secretName: *host
 
