@@ -7,8 +7,8 @@ spec:
     namespace: tools
     server: 'https://kubernetes.default.svc'
   source:
-    path: charts/homepage
-    repoURL: 'https://github.com/jameswynn/helm-charts'
+    path: app/tools/homepage
+    repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
     helm:
       releaseName: homepage
