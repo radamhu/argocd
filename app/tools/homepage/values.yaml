@@ -1,121 +1,69 @@
-image:
-  repository: "ghcr.io/gethomepage/homepage"
-  tag: "v0.9.6@sha256:e5b2616d17db8961a53c0b7d389d812d31c265d35696d475732f53278c9276f7"
-
 config:
-  bookmarks: {}
-  kubernetes:
-    mode: cluster
-    cluster:
-      # Shows the cluster node
-      show: true
-      # Shows the aggregate CPU stats
-      cpu: true
-      # Shows the aggregate memory stats
-      memory: true
-      # Shows a custom label
-      showLabel: true
-      label: "cluster"
-    nodes:
-      # Shows the clusters
-      show: true
-      # Shows the CPU for each node
-      cpu: true
-      # Shows the memory for each node
-      memory: true
-      # Shows the label, which is always the node name
-      showLabel: true
-  services:
-  - Network:
-    - FritzBox:
-        description: Router
-        href: http://192.168.0.1
-        icon: avmfritzbox.svg
-        weight: 1
-    - AdGuard Home:
-        description: Phihole
-        href: http://192.168.0.12
-        icon: adguard-home.svg
-        weight: 2
-  - Server:
-    - "PVE01":
-        description: Promox Web UI
-        href: https://192.168.0.10:8006
-        icon: proxmox.svg
-        weight: 41
-    - "Grafana":
-        description: Grafana
-        href: https://adaminfo.grafana.net/
-        icon: grafana.svg
-        weight: 42
-  - Media:
-    - Plex:
-        app: plex
-        namespace: media-server
-        description: Media Center
-        href: https://app.plex.tv/desktop
-        icon: plex.svg
-        weight: 1
-        widget:
-          type: tautulli
-          url: http://172.16.1.1:8181
-          key: aabbccddeeffgghhiijjkkllmmnnoo
-  settings:
-    color: neutral
-    hideVersion: true
-    iconStyle: theme
-    layout:
-    - Cloud:
-        icon: mdi-cloud
-    - Organization:
-        icon: mdi-file-document-multiple-outline
-    - Smart Home:
-        icon: mdi-home-outline
-    - Network:
-        icon: mdi-lan
-    - Media:
-        icon: mdi-filmstrip-box
-    - Indexer:
-        icon: mdi-download-multiple
-    - Downloader:
-        icon: mdi-download-outline
-    - Server:
-        icon: mdi-server
-    target: _self
-    theme: dark
-    title: Homelab
-  widgets:
-  - resources:
-      backend: resources
-      cpu: true
-      expanded: true
-      memory: true
-  - search:
-      provider: google
-      target: _blank
+    bookmarks:
+        - Developer:
+              - Github:
+                    - abbr: GH
+                      href: https://github.com/
+    services:
+        - My First Group:
+              - My First Service:
+                    href: http://localhost/
+                    description: Homepage is awesome
 
-ingress:
-  main:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-    enabled: true
-    hosts:
-    - host: dashboard.home.adaminformatika.hu
-      paths:
-      - path: /
-    ingressClassName: traefik
-    tls:
-    - hosts:
-      - dashboard.home.adaminformatika.hu
-      secretName: dashboard.home.adaminformatika.hu
+        - My Second Group:
+              - My Second Service:
+                    href: http://localhost/
+                    description: Homepage is the best
 
+        - My Third Group:
+              - My Third Service:
+                    href: http://localhost/
+                    description: Homepage is 😎
+    widgets:
+        # show the kubernetes widget, with the cluster summary and individual nodes
+        - kubernetes:
+              cluster:
+                  show: true
+                  cpu: true
+                  memory: true
+                  showLabel: true
+                  label: "cluster"
+              nodes:
+                  show: true
+                  cpu: true
+                  memory: true
+                  showLabel: true
+        - search:
+              provider: duckduckgo
+              target: _blank
+    kubernetes:
+        mode: cluster
+    settings:
+
+# The service account is necessary to allow discovery of other services
+serviceAccount:
+    create: true
+    name: homepage
+
+# This enables the service account to access the necessary resources
 enableRbac: true
 
-serviceAccount:
-  create: true
-
-replicaCount: 1
-
-resources:
-  limits:
-    cpu: 300m
+ingress:
+    main:
+        enabled: true
+        annotations:
+            # Example annotations to add Homepage to your Homepage!
+            gethomepage.dev/enabled: "true"
+            gethomepage.dev/name: "Homepage"
+            gethomepage.dev/description: "Dynamically Detected Homepage"
+            gethomepage.dev/group: "Dynamic"
+            gethomepage.dev/icon: "homepage.png"
+        ingressClassName: "traefik"
+        hosts:
+          - host: &host "dashboard.home.adaminformatika.hu"
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
