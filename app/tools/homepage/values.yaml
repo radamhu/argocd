@@ -85,6 +85,15 @@ homepage:
               - state: weather.forecast_home
                 label: wind speed
                 value: "{attributes.wind_speed} {attributes.wind_speed_unit}"
+      - Argocd:
+          description: ArgoCD
+          href: https://argocd.home.adaminformatika.hu/
+          icon: argocd.svg
+          weight: 70
+          widget:
+            type: argocd
+            url: https://argocd.home.adaminformatika.hu/
+            key: argocd-token
     - Media:
       - Tautulli:
           icon: tautulli
