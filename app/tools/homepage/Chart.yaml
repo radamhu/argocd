@@ -9,3 +9,4 @@ dependencies:
   - name: jameswynn/homepage
     repository: https://jameswynn.github.io/helm-charts
     version: v0.9.6
+
