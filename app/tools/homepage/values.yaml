@@ -94,6 +94,15 @@ homepage:
             type: argocd
             url: https://argocd.home.adaminformatika.hu/
             key: argocd-token
+      - Grafana:
+          description: Grafana
+          href: https://adaminfo.grafana.net/login/grafana_com
+          icon: grafana.svg
+          weight: 80
+          widget:
+            type: grafana
+            url: https://adaminfo.grafana.net/login/grafana_com
+            key: apikeyapikeyapikeyapikeyapikey
     - Media:
       - Tautulli:
           icon: tautulli
