@@ -25,4 +25,4 @@ appVersion: "1.0"
 dependencies:
 - name: generic-service
   version: "0.0.1"
-  repository: "file://../../helm-charts/generic-service"
+  repository: "file://../../../helm-charts/generic-service/"
