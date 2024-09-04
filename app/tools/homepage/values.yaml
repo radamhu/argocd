@@ -16,22 +16,136 @@ homepage:
             href: http://192.168.0.1
             icon: avmfritzbox.svg
             weight: 1
-        - AdGuard Home:
+        - Pihole Home:
             description: DNS Server
             href: http://192.168.0.12
             icon: adguard-home.svg
             weight: 2
+            widget:
+              type: pihole
+              url: http://192.168.0.12
+              version: 6 # required if running v6 or higher, defaults to 5
+              key: yourpiholeapikey # optional
     - Server:
       - Portainer:
           description: Container Management
           href: https://localhost:9443
           icon: portainer.svg
           weight: 30
-      - "Proxmox Node 1":
+          widget:
+            type: portainer
+            url: https://localhost:9443
+            env: 1
+            key: ptr_accesskeyaccesskeyaccesskeyaccesskey
+      - Proxmox:
           description: Promox Web UI
           href: https://192.168.0.10:8006
           icon: proxmox.svg
           weight: 41
+          widget:
+            type: proxmox
+            url: https://192.168.0.10:8006
+            username: api_token_id
+            password: api_token_secret
+            node: pve-1 # optional
+      - Unifi:
+          description: Unifi Controller
+          href: https://hassio.home.local:8443/
+          icon: unifi.svg
+          weight: 42
+          widget:
+            type: unifi
+            url: https://hassio.home.local:8443/
+            username: username
+            password: password
+            site: Site Name # optional
+      - Netdata:
+          description: Netdata
+          href: https://app.netdata.cloud/spaces/adaminfo-space/rooms/all-nodes/
+          icon: netdata.svg
+          weight: 50
+          widget:
+            type: netdata
+            url: https://app.netdata.cloud/spaces/adaminfo-space/
+      - Hassio:
+          description: Grafana
+          href: http://hassio.home.local:8123/lovelace/default_view
+          icon: homeassistant.svg
+          weight: 60
+          widget:
+            type: homeassistant
+            url: http://hassio.home.local:8123/lovelace/default_view
+            key: access_token
+            custom:
+              - state: sensor.total_power
+              - state: sensor.total_energy_today
+                label: energy today
+              - template: "{{ states.switch|selectattr('state','equalto','on')|list|length }}"
+                label: switches on
+              - state: weather.forecast_home
+                label: wind speed
+                value: "{attributes.wind_speed} {attributes.wind_speed_unit}"
+    - Media:
+      - Tautulli:
+          icon: tautulli
+          href:
+          container: tautulli
+          widget:
+            type: tautulli
+            url:
+            key: #api-key
+      - Bazarr:
+          description: Subtitle Management
+          href: http://bazarr.home.adaminformatika.hu/
+          icon: bazarr.png
+          weight: 10
+          widget:
+            type: bazarr
+            url: http://bazarr.home.adaminformatika.hu/
+            key: apikeyapikeyapikeyapikeyapikey
+      - Qbittorrent:
+          description: Torrent Client
+          href: http://qbittorrent.home.adaminformatika.hu/
+          icon: qbittorrent.png
+          weight: 20
+      - Sonarr:
+          description: TV Shows
+          href: http://sonarr.home.adaminformatika.hu/
+          icon: sonarr.png
+          weight: 30
+          widget:
+            type: sonarr
+            url: http://sonarr.home.adaminformatika.hu/
+            key: apikeyapikeyapikeyapikeyapikey
+            enableQueue: true # optional, defaults to false
+      - Radarr:
+          description: Movies
+          href: http://radarr.home.adaminformatika.hu/
+          icon: radarr.png
+          weight: 40
+          widget:
+            type: radarr
+            url: http://radarr.home.adaminformatika.hu/
+            key: apikeyapikeyapikeyapikeyapikey
+            enableQueue: true # optional, defaults to false
+      - Prowlarr:
+          description: Prowlarr
+          href: http://prowlarr.home.adaminformatika.hu/
+          icon: prowlarr.png
+          weight: 50
+          widget:
+            type: prowlarr
+            url: http://prowlarr.home.adaminformatika.hu/
+            key: apikeyapikeyapikeyapikeyapikey
+      - Plex:
+          description: Plex
+          href: http://plex.home.adaminformatika.hu/
+          icon: plex.png
+          weight: 60
+          widget:
+            type: plex
+            url: http://plex.home.adaminformatika.hu/
+            key: mytokenhere # see https://www.plexopedia.com/plex-media-server/general/plex-token/
     settings:
       color: neutral
       hideVersion: true
@@ -75,6 +189,7 @@ homepage:
           target: _blank
     kubernetes:
         mode: cluster
+
 
   # The service account is necessary to allow discovery of other services
   serviceAccount:
