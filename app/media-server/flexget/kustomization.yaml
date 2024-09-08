@@ -7,7 +7,7 @@ resources:
 - flexget-svc.yaml
 images:
 - name: ghcr.io/flexget/flexget
-  newTag: 3.11.43
+  newTag: 3.11.44
 labels:
 - includeSelectors: true
   pairs:
