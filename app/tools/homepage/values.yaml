@@ -68,7 +68,7 @@ homepage:
             type: netdata
             url: https://app.netdata.cloud/spaces/adaminfo-space/
       - Hassio:
-          description: Grafana
+          description: Hassio
           href: http://hassio.home.local:8123/lovelace/default_view
           icon: homeassistant.svg
           weight: 60
