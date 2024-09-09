@@ -1,5 +1,6 @@
 
 This is a bjw's helm based application :)
+https://bjw-s.github.io/helm-charts/docs/app-template/
 
 -- https://gethomepage.dev/main/installation/k8s/
 
