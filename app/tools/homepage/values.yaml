@@ -134,7 +134,7 @@ homepage:
           widget:
             type: sonarr
             url: http://sonarr.home.adaminformatika.hu/
-            key: "{{ .Values.env.SONARR-API }}"
+            key: 7621a07a286649f0b6436e9b0397c7ea
             enableQueue: true # optional, defaults to false
       - Radarr:
           description: Movies
