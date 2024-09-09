@@ -134,7 +134,7 @@ homepage:
           widget:
             type: sonarr
             url: http://sonarr.home.adaminformatika.hu/
-            key: apikeyapikeyapikeyapikeyapikey
+            key: "{{ .Values.env.SONARR-API }}"
             enableQueue: true # optional, defaults to false
       - Radarr:
           description: Movies
@@ -249,3 +249,11 @@ homepage:
               secretKeyRef:
                 key: tools-ns-sealed-secret
                 name: pihole_key
+          - name: SONARR-API
+            valueFrom:
+              secretKeyRef:
+                key: tools-ns-sealed-secret
+                name: sonarr-api
+
+
+
