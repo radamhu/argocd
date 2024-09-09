@@ -25,7 +25,7 @@ homepage:
               type: pihole
               url: http://192.168.0.12
               version: 6 # required if running v6 or higher, defaults to 5
-              key: "{{ .Values.env.PIHOLE_KEY }}" # optional
+              key: "{{PIHOLE_KEY}}" # optional
     - Server:
       - Portainer:
           description: Container Management
