@@ -244,12 +244,12 @@ homepage:
     main:
       containers:
         env:
-          - name: PIHOLE_KEY
+          PIHOLE_KEY:
             valueFrom:
               secretKeyRef:
                 key: tools-ns-sealed-secret
                 name: pihole_key
-          - name: SONARR-API
+          SONARR-API:
             valueFrom:
               secretKeyRef:
                 key: tools-ns-sealed-secret
