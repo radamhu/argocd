@@ -4,10 +4,10 @@ metadata:
   name: homepage
 spec:
   destination:
-    namespace: media-server
+    namespace: tools
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/media-server/homepage
+    path: app/tools/homepage
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []
