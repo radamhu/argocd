@@ -1,0 +1,88 @@
+replicaCount: 1
+
+image:
+  registry: docker.io
+  repository: wabayang/jelu
+  pullPolicy: IfNotPresent
+  tag: latest
+
+# -- Set custom environment variables
+environment: {}
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+persistence:
+  config:
+    enabled: true
+    size: 50Mi
+    accessModes: ReadWriteOnce
+    storageClassname: ""
+  database:
+    enabled: true
+    size: 1Gi
+    accessModes: ReadWriteOnce
+    storageClassname: ""
+  images:
+    enabled: true
+    size: 1Gi
+    accessModes: ReadWriteOnce
+    storageClassname: ""
+  imports:
+    enabled: true
+    size: 1Gi
+    accessModes: ReadWriteOnce
+    storageClassname: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 0
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: false
+  runAsUser: 0
+  runAsGroup: 0
+
+service:
+  type: ClusterIP
+  port: 11111
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - host: &host "jelu.home.adaminformatika.hu"
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+      tls:
+      - hosts:
+        - *host
+        secretName: *host
+
+resources:
+  requests:
+    cpu: 15m
+    memory: 550M
+  limits:
+    cpu: 200m
+    memory: 800M
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

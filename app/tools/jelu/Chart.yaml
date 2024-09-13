@@ -1,0 +1,12 @@
+apiVersion: v2
+name: jelu
+description: Chart for Jelu
+type: application
+icon: https://github.com/gethomepage/homepage/blob/main/public/mstile-150x150.png
+version: 0.0.1
+appVersion: v0.0.1
+dependencies:
+  - name: jelu
+    repository: https://tibuntu.github.io/helm-charts/
+    version: 1.0.0
+
