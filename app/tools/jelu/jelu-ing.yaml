@@ -1,0 +1,35 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Media Server
+    gethomepage.dev/group: Media
+    gethomepage.dev/icon: jelu.png
+    gethomepage.dev/name: jelu
+    gethomepage.dev/widget.type: "jelu"
+    gethomepage.dev/widget.url: "http://jelu.home.adaminformatika.hu/"
+    gethomepage.dev/pod-selector: ""
+    gethomepage.dev/weight: 10 # optional
+    gethomepage.dev/instance: "public" # optional
+  name: jelu
+  namespace: tools
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: jelu.home.adaminformatika.hu
+    http:
+      paths:
+      - backend:
+          service:
+            name: jelu
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - jelu.home.adaminformatika.hu
+    secretName: jelu.home.adaminformatika.hu

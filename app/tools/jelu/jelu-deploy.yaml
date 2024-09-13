@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jelu
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jelu
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jelu
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+      - name: jelu
+        image: wabayang/jelu
+        imagePullPolicy: Always
+        # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
+        resources:
+          limits: # you restrict the maximum amount of memory available to the pods
+            memory: "800M"
+            cpu: "200m"
+          requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+            memory: "550M"
+            cpu: "15m"
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /database
+          name: database
+        - mountPath: /files/images
+          name: images
+        - mountPath: /files/imports
+          name: imports
+      restartPolicy: Always
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: jelu
+      - name: database
+        persistentVolumeClaim:
+          claimName: jelu
+      - name: images
+        persistentVolumeClaim:
+          claimName: jelu
+      - name: imports
+        persistentVolumeClaim:
+          claimName: jelu
+status: {}
