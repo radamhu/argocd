@@ -17,7 +17,7 @@ status: {}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jelu-ddatabase
+  name: jelu-database
   labels:
     type: database
 spec:
