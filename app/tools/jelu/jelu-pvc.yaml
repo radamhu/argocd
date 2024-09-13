@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jelu
+  name: jelu-config
   labels:
     type: config
 spec:
@@ -17,7 +17,7 @@ status: {}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jelu
+  name: jelu-ddatabase
   labels:
     type: database
 spec:
@@ -32,7 +32,7 @@ status: {}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jelu
+  name: jelu-images
   labels:
     type: images
 spec:
@@ -47,7 +47,7 @@ status: {}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jelu
+  name: jelu-imports
   labels:
     type: imports
 spec:

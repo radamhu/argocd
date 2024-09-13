@@ -45,14 +45,14 @@ spec:
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: jelu
+          claimName: jelu-config
       - name: database
         persistentVolumeClaim:
-          claimName: jelu
+          claimName: jelu-database
       - name: images
         persistentVolumeClaim:
-          claimName: jelu
+          claimName: jelu-images
       - name: imports
         persistentVolumeClaim:
-          claimName: jelu
+          claimName: jelu-imports
 status: {}
