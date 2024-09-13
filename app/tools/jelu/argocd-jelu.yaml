@@ -10,10 +10,6 @@ spec:
     path: app/tools/jelu
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
-    helm:
-      releaseName: jelu
-      valueFiles:
-      - values.yaml
   project: default
   syncPolicy:
     automated: # Automated sync with 5 retries each one with a 5sec delay.
