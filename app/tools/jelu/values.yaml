@@ -56,7 +56,7 @@ jelu:
     runAsGroup: 0
 
   service:
-    type: ClusterIP
+    type: LoadBalancer
     port: 11111
 
   ingress:
