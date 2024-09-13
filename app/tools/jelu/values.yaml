@@ -23,22 +23,22 @@ persistence:
     enabled: true
     size: 50Mi
     accessModes: ReadWriteOnce
-    storageClassname: ""
+    storageClassname: "local-path"
   database:
     enabled: true
     size: 1Gi
     accessModes: ReadWriteOnce
-    storageClassname: ""
+    storageClassname: "local-path"
   images:
     enabled: true
     size: 1Gi
     accessModes: ReadWriteOnce
-    storageClassname: ""
+    storageClassname: "local-path"
   imports:
     enabled: true
     size: 1Gi
     accessModes: ReadWriteOnce
-    storageClassname: ""
+    storageClassname: "local-path"
 
 podAnnotations: {}
 

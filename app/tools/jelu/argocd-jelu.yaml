@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: homepage
+  name: jelu
 spec:
   destination:
     namespace: tools
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/tools/homepage
+    path: app/tools/jelu
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
     helm:
-      releaseName: homepage
+      releaseName: jelu
       valueFiles:
       - values.yaml
   project: default
