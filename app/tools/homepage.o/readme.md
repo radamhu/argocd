@@ -20,6 +20,9 @@ k create secret generic tools-ns-sealed-secret --namespace=tools --dry-run=clien
 --from-literal=hassio_access_token=
  -o yaml > ./mysecret.yaml
 
+wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.16.0/kubeseal-linux-amd64 -O /usr/local/bin/kubeseal
+chmod 755 /usr/local/bin/kubeseal
+
 kubeseal --controller-name=sealed-secrets-controller --controller-namespace=kube-system --format yaml --secret-file mysecret.yaml --sealed-secret-file tools-ns-sealed-secret.yaml
 
 kubectl create -f tools-ns-sealed-secret.yaml
