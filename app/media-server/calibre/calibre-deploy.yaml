@@ -30,10 +30,10 @@ spec:
               value: "Europe/Budapest"
             # - name: DOCKER_MODS
             #   value: "linuxserver/calibre-web:calibre"
-          ports:
-            - name: "http-port"
-              containerPort: 8083
-              protocol: TCP
+          # ports:
+          #   - name: "http-port"
+          #     containerPort: 8083
+          #     protocol: TCP
           volumeMounts:
             - name: calibre-config
               mountPath: /config
