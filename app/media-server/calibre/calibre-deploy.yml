@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calibre
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calibre
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: calibre
+    spec:
+      containers:
+        - name: calibre
+          image: linuxserver/calibre-web
+          env:
+            - name: PUID
+              value: "1001"
+            - name: PGID
+              value: "1001"
+            - name: TZ
+              value: "Europe/Budapest"
+            # - name: DOCKER_MODS
+            #   value: "linuxserver/calibre-web:calibre"
+          ports:
+            - name: "http-port"
+              containerPort: 8083
+              protocol: TCP
+          volumeMounts:
+            - name: calibre-config
+              mountPath: /config
+            - name: calibre-books
+              mountPath: /books
+          resources:
+            requests:
+              memory: '128Mi'
+              cpu: '100m'
+            limits:
+              memory: '512Mi'
+              cpu: '1000m'
+      volumes:
+        - name: calibre-config
+          persistentVolumeClaim:
+            claimName: calibre-config
+        - name: calibre-books
+          persistentVolumeClaim:
+            claimName: calibre-books

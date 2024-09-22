@@ -1,0 +1,36 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Media Server
+    gethomepage.dev/group: Media
+    gethomepage.dev/icon: calibre.png
+    gethomepage.dev/name: calibre
+    gethomepage.dev/widget.type: "calibre"
+    gethomepage.dev/widget.url: "http://calibre.home.adaminformatika.hu/"
+    gethomepage.dev/pod-selector: ""
+    gethomepage.dev/weight: 10 # optional
+    gethomepage.dev/instance: "public" # optional
+  name: calibre
+  namespace: media-server
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: &host "calibre.home.adaminformatika.hu"
+    http:
+      paths:
+      - backend:
+          service:
+            name: homepage
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - *host
+    secretName: *host
+
