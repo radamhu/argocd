@@ -3,17 +3,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: calibre
-  namespace: media-server
-  labels:
-      app.kubernetes.io/name: calibre
 spec:
   ports:
   - port: 80
     protocol: TCP
     targetPort: 8083
   selector:
-    # app: calibre
-    app.kubernetes.io/name: calibre
+    app: calibre
   type: LoadBalancer
   # if type: LoadBalancer is enabled than comment out INGRESS section below
 status:
