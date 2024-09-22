@@ -119,6 +119,11 @@ data:
           href: http://plex.home.adaminformatika.hu/
           icon: plex.png
           weight: 60
+      - Calibre:
+          description: Calibre
+          href: http://calibre.home.adaminformatika.hu/
+          icon: calibre.png
+          weight: 70
   widgets.yaml: |
     - kubernetes:
         cluster:
