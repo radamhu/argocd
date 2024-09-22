@@ -28,6 +28,8 @@ spec:
               value: "1001"
             - name: TZ
               value: "Europe/Budapest"
+            - name: CALIBRE_PORT
+              value: "8083"
             # - name: DOCKER_MODS
             #   value: "linuxserver/calibre-web:calibre"
           # ports:
