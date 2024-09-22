@@ -7,7 +7,7 @@ resources:
 - calibre-svc.yaml
 images:
 - name: linuxserver/calibre-web
-  newTag: 7.18.0
+  newTag: version-0.6.23
 labels:
 - includeSelectors: true
   pairs:
