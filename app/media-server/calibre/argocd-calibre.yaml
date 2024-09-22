@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: bazarr
+  name: calibre
 spec:
   destination:
     namespace: media-server
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/media-server/bazarr
+    path: app/media-server/calibre
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []
