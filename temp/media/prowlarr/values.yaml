@@ -1,0 +1,26 @@
+image:
+  repository: "ghcr.io/hotio/prowlarr"
+  tag: "release-1.23.1.4708@sha256:76f4053d3e21b2c134a9240e74834d8b6daf7b636f8335f22587d2093fbb133c"
+
+ports: 
+- name: main
+  containerPort: 9696
+
+ingress:
+  host: prowlarr.wagner.gg
+
+envs:
+- PUID: 5000
+- PGID: 5000
+
+hostPaths:
+- name: config
+  hostPath: /srv/nvme/container-data/prowlarr
+  containerPath: /config
+
+homepage:
+  name: Prowlarr
+  group: Indexer
+  description: Index Manager
+  icon: prowlarr.svg
+  weight: 10

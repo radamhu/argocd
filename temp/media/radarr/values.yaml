@@ -1,0 +1,41 @@
+image:
+  repository: "ghcr.io/hotio/radarr"
+  tag: "release-5.10.4.9218@sha256:e81b938c1ffd9a8ca3cd610b33a02ab376f243d246054fb65ecf42b9afb0c0ff"
+
+podLabels:
+  zfs-encryption: "true"
+
+ports: 
+- name: main
+  containerPort: 7878
+
+ingress:
+  host: radarr.wagner.gg
+
+envs:
+- PUID: 5000
+- PGID: 5000
+
+hostPaths:
+- name: config
+  hostPath: /srv/nvme/container-data/radarr
+  containerPath: /config
+- name: downloads-torrent
+  hostPath: /srv/downloads/Torrent
+  containerPath: /downloads/torrent
+- name: downloads-usenet
+  hostPath: /srv/downloads/Usenet
+  containerPath: /downloads/usenet
+- name: movies
+  hostPath: /srv/hdd/multimedia/Filme-Radarr
+  containerPath: /movies
+- name: live-music
+  hostPath: /srv/hdd/multimedia/Live-Konzerte
+  containerPath: /live-music
+
+homepage:
+  name: Radarr
+  group: Indexer
+  description: Movie Manager
+  icon: radarr.svg
+  weight: 12

@@ -1,0 +1,33 @@
+policy: sync
+registry: noop
+interval: 15s
+
+extraArgs: 
+- "--ingress-class=nginx-private"
+
+sources:
+  - service
+  - ingress
+  - crd
+
+provider:
+  name: webhook
+  webhook:
+    image:
+      repository: ghcr.io/muhlba91/external-dns-provider-adguard
+      tag: v7.0.1@sha256:12ba21c06ef26a53ccc9d764bbcf932661bb04ec1e481853013f7d09a1ac714a
+    env:
+    - name: SERVER_HOST
+      value: "0.0.0.0" 
+    - name: ADGUARD_URL
+      value: http://192.168.0.2
+    - name: ADGUARD_USER
+      valueFrom:
+        secretKeyRef:
+          name: external-dns-adguard-home
+          key: username
+    - name: ADGUARD_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: external-dns-adguard-home
+          key: password

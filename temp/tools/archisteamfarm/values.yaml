@@ -1,0 +1,22 @@
+image:
+  repository: "ghcr.io/justarchinet/archisteamfarm"
+  tag: "6.0.7.4@sha256:d9b041155cbca08d4bd0ce0234ca7c5bdfe836359f39b22ecaf6ac073b5d9129"
+
+hostPaths:
+- name: data
+  hostPath: /srv/nvme/container-data/archisteamfarm
+  containerPath: /app/config
+
+ports: 
+- name: main
+  containerPort: 1242
+
+ingress:
+  host: asf.wagner.gg
+
+homepage:
+  name: ArchiSteamFarm
+  group: Cloud
+  description: Automated Steam Card Farming
+  icon: archisteamfarm.png
+  weight: 50

@@ -1,0 +1,93 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app tailscale-gateway
+  namespace: networking
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.4.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+    controllers:
+      tailscale-gateway:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/tailscale/tailscale
+              tag: v1.74.1@sha256:a013ce5266e5c796efe31c7cf9562deb21423f8586361d7faadaf675fa4296ac
+            env:
+              TZ: "UTC"
+              NO_AUTOUPDATE: true
+              TS_KUBE_SECRET: ""
+              SA_NAME: tailscale
+              TS_HOSTNAME: "tailscale-k8s-gateway"
+              TS_USERSPACE: true
+              TS_ROUTES: "192.168.0.0/16"
+              TS_STATE_DIR: &path /tmp
+              TS_EXTRA_ARGS: "--advertise-exit-node --advertise-tags=tag:cluster-node --accept-routes --snat-subnet-routes=false"
+            envFrom:
+              - secretRef:
+                  name: tailscale-secret
+            resources:
+              requests:
+                cpu: 10m
+                memory: 50M
+              limits:
+                memory: 278M
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        pod:
+          annotations:
+            configmap.reloader.stakater.com/reload: tailscale-secret
+    persistence:
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.cache
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: *path
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 45387
+    serviceAccount:
+      create: true
+      name: tailscale

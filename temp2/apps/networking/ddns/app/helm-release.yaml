@@ -1,0 +1,126 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app cloudflare-ddns
+  namespace: networking
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.4.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 5m
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      cloudflare-ddns:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/larivierec/cloudflare-ddns
+              tag: main@sha256:ef6652fa11357ac6ce4136df3ac0a4a7440d81925f070dc0cc70c3de02e0416a
+            args:
+              - --zone-name
+              - garb.dev
+              - --record-name
+              - ipv4.garb.dev
+              - --provider
+              - random
+            env:
+              ACCOUNT_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: ddns
+                    key: ACCOUNT_TOKEN
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health/alive
+                    port: &healthPort 8080
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health/ready
+                    port: *healthPort
+            resources:
+              requests:
+                memory: 64Mi
+                cpu: 10m
+              limits:
+                memory: 128Mi
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 9000
+          health:
+            port: *healthPort
+    serviceMonitor:
+      app:
+        serviceName: *app
+        endpoints:
+          - port: health
+            scheme: http
+            path: /metrics
+            interval: 30s
+            scrapeTimeout: 30s
+    # ingress:
+    #   app:
+    #     enabled: true
+    #     className: internal
+    #     hosts:
+    #       - host: &host "ddns.garb.dev"
+    #         paths:
+    #           - path: /
+    #             service:
+    #               identifier: app
+    #               port: http
+    #     tls:
+    #       - hosts:
+    #           - *host
+    #         secretName: wildcard-cert-tls
+    route:
+      app:
+        enabled: true
+        parentRefs:
+          - name: envoy-internal
+            namespace: networking
+            sectionName: https
+        hostnames:
+          - "ddns.garb.dev"
+        rules:
+          - backendRefs:
+              - port: *port
+                name: *app
+      cilium:
+        enabled: true
+        parentRefs:
+          - name: cilium-internal
+            namespace: networking
+            sectionName: https
+        hostnames:
+          - "ddns-cilium.garb.dev"
+        rules:
+          - backendRefs:
+              - port: *port
+                name: *app

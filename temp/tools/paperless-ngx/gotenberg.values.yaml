@@ -1,0 +1,17 @@
+image:
+  repository: "gotenberg/gotenberg"
+  tag: "8.10.0@sha256:ffa098d61f40dc4649acb2d3ebf174d34df649cf69d20b96f3672fb9a7237a0c"
+
+ports:
+- name: main
+  containerPort: 3000
+
+health:
+  path: /health
+
+command:
+- "gotenberg"
+
+args:
+- "--chromium-disable-javascript=true"
+- "--chromium-allow-list=file:///tmp/.*"

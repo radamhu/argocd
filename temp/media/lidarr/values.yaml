@@ -1,0 +1,38 @@
+image:
+  repository: "ghcr.io/hotio/lidarr"
+  tag: "release-2.5.3.4341@sha256:4512583253b45538975b3a5d9ee671cf5623e9fcc53e367c755d2130d67878c0"
+
+podLabels:
+  zfs-encryption: "true"
+
+ports: 
+- name: main
+  containerPort: 8686
+
+ingress:
+  host: lidarr.wagner.gg
+
+envs:
+- PUID: 5000
+- PGID: 5000
+
+hostPaths:
+- name: config
+  hostPath: /srv/nvme/container-data/lidarr
+  containerPath: /config
+- name: downloads-torrent
+  hostPath: /srv/downloads/Torrent
+  containerPath: /downloads/torrent
+- name: downloads-usenet
+  hostPath: /srv/downloads/Usenet
+  containerPath: /downloads/usenet
+- name: music
+  hostPath: /srv/nvme/music
+  containerPath: /music
+
+homepage:
+  name: Lidarr
+  group: Indexer
+  description: Music Manager
+  icon: lidarr.svg
+  weight: 11

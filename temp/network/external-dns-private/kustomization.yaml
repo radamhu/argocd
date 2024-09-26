@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- base/sealedsecret.yaml
+
+patchesJson6902:
+  - target:
+      version: v1
+      kind: Deployment
+      name: external-dns-private
+    patch: |
+      [
+        {
+          "op": "replace",
+          "path": "/spec/template/spec/containers/1/ports",
+          "value": [
+            {
+              "name": "http-webhook",
+              "containerPort": 8888
+            }
+          ]
+        }
+      ]
+
+helmCharts:
+- repo: https://kubernetes-sigs.github.io/external-dns
+  name: external-dns
+  version: 1.15.0
+  releaseName: external-dns-private
+  valuesFile: values.yaml
+  namespace: network
+  includeCRDs: true

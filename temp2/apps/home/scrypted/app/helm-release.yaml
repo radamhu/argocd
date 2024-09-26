@@ -1,0 +1,122 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app scrypted
+  namespace: home
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.4.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      scrypted:
+        type: deployment
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          hostNetwork: true
+          dnsPolicy: ClusterFirstWithHostNet
+        containers:
+          app:
+            image:
+              repository: ghcr.io/koush/scrypted
+              tag: v0.119.1-jammy-full
+            resources:
+              requests:
+                gpu.intel.com/i915: 1
+                cpu: 136m
+                memory: 1Gi
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 3Gi
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 11080
+          rebroadcast:
+            port: 34135
+    # ingress:
+    #   app:
+    #     enabled: true
+    #     className: internal
+    #     hosts:
+    #       - host: &host "scrypted.garb.dev"
+    #         paths:
+    #           - path: /
+    #             service:
+    #               identifier: app
+    #               port: http
+    #     tls:
+    #       - hosts:
+    #           - *host
+    #         secretName: wildcard-cert-tls
+    route:
+      app:
+        enabled: true
+        parentRefs:
+          - name: envoy-internal
+            namespace: networking
+        hostnames:
+          - "scrypted.garb.dev"
+        rules:
+          - backendRefs:
+              - port: *port
+                name: *app
+      cilium:
+        enabled: true
+        parentRefs:
+          - name: cilium-internal
+            namespace: networking
+        hostnames:
+          - "scrypted-cilium.garb.dev"
+        rules:
+          - backendRefs:
+              - port: *port
+                name: *app
+    persistence:
+      config:
+        enabled: true
+        existingClaim: config-scrypted-0
+        advancedMounts:
+          scrypted:
+            app:
+              - path: /server/volume
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /.cache
+      cache-npm:
+        type: emptyDir
+        globalMounts:
+          - path: /.npm
