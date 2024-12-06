@@ -81,7 +81,7 @@ hostPaths: []
 envsubst:
   image:
     repository: nixery.dev/shell/envsubst
-    tag: "latest@sha256:86c229f218d8a5b4bb0a1febdb98605841e726b21c59b20dc3b4ded48db09d6f"
+    tag: "latest"
   files: []
   # - src:
   #   dest:
@@ -96,7 +96,7 @@ database:
   mariadb:
     image:
       repository: mariadb
-      tag: "11.5.2@sha256:4066f2d4805fef72a83cf4a62689a0aadb6e83a8c8a82b64431edd4b94f684f8"
+      tag: "11.6.2@sha256:a9547599cd87d7242435aea6fda22a9d83e2c06d16c658ef70d2868b3d3f6a80"
     backup:
       schedule: "0 4 * * *"
       image:
@@ -105,7 +105,7 @@ database:
   postgresql:
     image:
       repository: postgres
-      tag: "17.0@sha256:4ec37d2a07a0067f176fdcc9d4bb633a5724d2cc4f892c7a2046d054bb6939e5"
+      tag: "17.2@sha256:fe4efc6901dda0d952306fd962643d8022d7bb773ffe13fe8a21551b9276e50c"
     backup:
       schedule: "0 4 * * *"
       image:
@@ -115,7 +115,7 @@ database:
 helper:
   image:
     repository: busybox
-    tag: "1.36.1@sha256:c230832bd3b0be59a6c47ed64294f9ce71e91b327957920b6929a0caa8353140"
+    tag: "1.37.0@sha256:db142d433cdde11f10ae479dbf92f3b13d693fd1c91053da9979728cceb1dc68"
 
 homepage:
   name: ""
