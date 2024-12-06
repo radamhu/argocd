@@ -1,27 +1,14 @@
-# apiVersion: kustomize.config.k8s.io/v1beta1
-# kind: Kustomization
-# resources:
-# - plex-deploy.yaml
-# - plex-ing.yaml
-# - plex-pvc.yaml
-# - plex-svc.yaml
-# - cors-middleware.yaml
-# images:
-# - name: linuxserver/plex
-#   newTag: 1.41.0
-# labels:
-# - includeSelectors: true
-#   pairs:
-#     app: plex
-
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
-helmGlobals:
-  chartHome: ../../../helm-charts
-
-helmCharts:
-- name: generic-service
-  releaseName: plex
-  valuesFile: values.yaml
-  namespace: media-server
+resources:
+  - plex-pvc.yaml
+  - plex-svc.yaml
+  - plex-deploy.yaml
+  - plex-ing.yaml
+images:
+- name: docker.io/plexinc/pms-docker
+  newTag: 1.40.2.8395-c67dce28e
+labels:
+- includeSelectors: true
+  pairs:
+    app: plex

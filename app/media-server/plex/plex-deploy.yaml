@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: plex
+  namespace: media-server
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -22,51 +23,33 @@ spec:
         runAsUser: 0
       containers:
       - name: plex
-        # plexinc/pms-docker
-        # image: plexinc/pms-docker
-        ###########################
-        ###########################
-        image: linuxserver/plex
+        image: "docker.io/plexinc/pms-docker:1.40.2.8395-c67dce28e"
         imagePullPolicy: Always
-        # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
         resources: {}
-        # envFrom:
-        # - configMapRef:
-        #     name: plex-env-vars
-        # - secretRef:
-        #     name: plex-claim-token
         env:
-          # Optionally you can obtain a claim token from https://plex.tv/claim⁠
-          # value must not contain ""
         - name: ADVERTISE_IP
-          value: http://192.168.0.179/
+          value: http://192.168.0.180/
         - name: PLEX_CLAIM
-          value: claim-jYAPqrcCcT8yBirwweL7
+          value: claim-iHD5wyqT2SKfs2CBy87K
         - name: HOSTNAME
           value: "k8sPlex"
         - name: VERSION
           value: "docker"
         - name: PUID
-          value: "1000"
+          value: "0"
         - name: PGID
-          value: "1000"
-        # scenario 1 : 1st deplyo failed due to permissione denieud --> apply chown
-        # scenraio 2 : delete Plex folder from claimdisk, only keep 777 permission folder
-        # Error in command line:the argument for option '--serverUuid' should follow immediately after the equal sign
-        # CLAIM problem ?
+          value: "0"
         volumeMounts:
-        # Plex library location. This can grow very large, 50gb+ is likely for a large collection.
-        - mountPath: /config
-          name: config
-        - mountPath: /downloads # The mountpoint inside the container
-          name: nfs-vol
+        - name: plex-config
+          mountPath: /config
+        - name: nfs-vol
+          mountPath: /downloads # The mountpoint inside the container
       restartPolicy: Always
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: plex
-      - name: nfs-vol
-        nfs:
-          server: 192.168.0.21 # IP to our NFS server
-          path: /media/ # The path to our NFS share # The exported directory
-status: {}
+        - name: plex-config
+          persistentVolumeClaim:
+            claimName: plex-config
+        - name: nfs-vol
+          nfs:
+            server: 192.168.0.21 # IP to our NFS server
+            path: /media/ # The path to our NFS share # The exported directory
