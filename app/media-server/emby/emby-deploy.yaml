@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: plex
+  name: emby
   namespace: media-server
   annotations:
     reloader.stakater.com/auto: "true"
@@ -10,45 +10,35 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: plex
+      app: emby
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: plex
+        app: emby
     spec:
       securityContext:
         fsGroup: 0
         runAsUser: 0
       containers:
-      - name: plex
-        image: docker.io/plexinc/pms-docker:1.40.2.8395-c67dce28e
+      - name: emby
+        image: docker.io/emby/embyserver:4.9.0.32
         imagePullPolicy: Always
         resources: {}
-        env:
-        - name: ADVERTISE_IP
-          value: http://192.168.0.180/
-        - name: PLEX_CLAIM
-          value: claim-iHD5wyqT2SKfs2CBy87K
-        - name: HOSTNAME
-          value: "k8sPlex"
-        - name: VERSION
-          value: "docker"
-        - name: PUID
-          value: "0"
-        - name: PGID
-          value: "0"
         volumeMounts:
-        - name: plex-config
+        - name: emby-config
           mountPath: /config
         - name: nfs-vol
           mountPath: /downloads # The mountpoint inside the container
+        ports:
+        - containerPort: 8096
+        - containerPort: 8920
       restartPolicy: Always
       volumes:
-        - name: plex-config
+        - name: emby-config
           persistentVolumeClaim:
-            claimName: plex-config
+            claimName: emby-config
         - name: nfs-vol
           nfs:
             server: 192.168.0.21 # IP to our NFS server

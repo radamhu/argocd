@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: emby
+  namespace: media-server
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: emby.home.adaminformatika.hu
+    http:
+      paths:
+      - backend:
+          service:
+            name: emby
+            port:
+              number: 8920
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - emby.home.adaminformatika.hu
+    secretName: emby.home.adaminformatika.hu
