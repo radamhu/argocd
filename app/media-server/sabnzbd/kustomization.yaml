@@ -7,7 +7,7 @@ resources:
 - sabnzbd-ing.yaml
 images:
 - name: pmialon/sabnzbd
-  newTag: 4.4.0
+  newTag: 4.4.1
 labels:
 - includeSelectors: true
   pairs:
