@@ -7,7 +7,7 @@ resources:
 - bazarr-svc.yaml
 images:
 - name: pmialon/bazarr
-  newTag: 1.4.5
+  newTag: 1.5.0
 labels:
 - includeSelectors: true
   pairs:
