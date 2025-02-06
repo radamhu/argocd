@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- navidrome-deploy.yaml
+- navidrome-pvc.yaml
+- navidrome-svc.yaml
+- navidrome-ing.yaml
+images:
+- name: deluan/navidrome
+  newTag: 0.54.4
+labels:
+- includeSelectors: true
+  pairs:
+    app: navidrome

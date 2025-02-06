@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: navidrome
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: navidrome
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: navidrome
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+        - image: linuxserver/navidrome
+          name: navidrome
+          imagePullPolicy: Always
+          resources:
+            limits: # you restrict the maximum amount of memory available to the pods
+              memory: "1024M"
+              cpu: "500m"
+            requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+              memory: "256M"
+              cpu: "250m"
+          volumeMounts:
+            - mountPath: /data
+              name: config
+            - mountPath: /downloads # The mountpoint inside the container
+              name: nfs-vol
+      restartPolicy: Always
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: navidrome
+        - name: nfs-vol
+          nfs:
+            server: 192.168.0.21 # IP to our NFS server
+            path: /media/ # The path to our NFS share # The exported directory
+status: {}
