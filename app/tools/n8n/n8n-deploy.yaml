@@ -34,15 +34,9 @@ spec:
           volumeMounts:
             - mountPath: /home/node/.n8n
               name: config
-            - mountPath: /downloads # The mountpoint inside the container
-              name: nfs-vol
       restartPolicy: Always
       volumes:
         - name: config
           persistentVolumeClaim:
             claimName: n8n
-        - name: nfs-vol
-          nfs:
-            server: 192.168.0.21 # IP to our NFS server
-            path: /media/ # The path to our NFS share # The exported directory
 status: {}
