@@ -4,22 +4,22 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-  name: lidarr
-  namespace: media-server
+  name: nodered
+  namespace: tools
 spec:
   ingressClassName: traefik
   rules:
-  - host: lidarr.home.adaminformatika.hu
+  - host: nodered.home.adaminformatika.hu
     http:
       paths:
       - backend:
           service:
-            name: lidarr
+            name: nodered
             port:
               number: 80
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - lidarr.home.adaminformatika.hu
-    secretName: lidarr.home.adaminformatika.hu
+    - nodered.home.adaminformatika.hu
+    secretName: nodered.home.adaminformatika.hu

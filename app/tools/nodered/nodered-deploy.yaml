@@ -2,27 +2,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lidarr
+  name: nodered
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: lidarr
+      app: nodered
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: lidarr
+        app: nodered
     spec:
       securityContext:
         fsGroup: 0
         runAsUser: 0
       containers:
-        - image: linuxserver/lidarr
-          name: lidarr
+        - image: nodered/node-red
+          name: nodered
           imagePullPolicy: Always
           resources:
             limits: # you restrict the maximum amount of memory available to the pods
@@ -32,7 +32,7 @@ spec:
               memory: "256M"
               cpu: "250m"
           volumeMounts:
-            - mountPath: /config
+            - mountPath: /data
               name: config
             - mountPath: /downloads # The mountpoint inside the container
               name: nfs-vol
@@ -40,7 +40,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: lidarr
+            claimName: nodered
         - name: nfs-vol
           nfs:
             server: 192.168.0.21 # IP to our NFS server

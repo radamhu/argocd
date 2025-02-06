@@ -5,7 +5,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   name: n8n
-  namespace: media-server
+  namespace: tools
 spec:
   ingressClassName: traefik
   rules:

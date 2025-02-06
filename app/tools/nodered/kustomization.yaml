@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- nodered-deploy.yaml
+- nodered-pvc.yaml
+- nodered-svc.yaml
+- nodered-ing.yaml
+images:
+- name: nodered/node-red
+  newTag: 4.0.8-22
+labels:
+- includeSelectors: true
+  pairs:
+    app: nodered

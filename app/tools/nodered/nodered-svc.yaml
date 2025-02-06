@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: lidarr
+  name: nodered
 spec:
   ports:
   - port: 80
     protocol: TCP
-    targetPort: 8686
+    targetPort: 1880
   selector:
-    app: lidarr
+    app: nodered
   type: LoadBalancer
   # if type: LoadBalancer is enabled than comment out INGRESS section below
 status:

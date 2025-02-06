@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: lidarr
+  name: nodered
 spec:
   destination:
-    namespace: media-server
+    namespace: tools
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/media-server/lidarr
+    path: app/tools/nodered
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []
