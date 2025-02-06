@@ -17,15 +17,6 @@ spec:
       labels:
         app: lidarr
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                - prod-master-1
       nodeSelector:
         kubernetes.io/hostname: prod-master-1
       securityContext:
