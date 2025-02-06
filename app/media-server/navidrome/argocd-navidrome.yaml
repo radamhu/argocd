@@ -7,7 +7,7 @@ spec:
     namespace: media-server
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/media-server/lidarr
+    path: app/media-server/navidrome
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []
