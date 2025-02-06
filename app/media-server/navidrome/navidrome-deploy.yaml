@@ -26,6 +26,8 @@ spec:
                 operator: In
                 values:
                 - prod-master-1
+      nodeSelector:
+        kubernetes.io/hostname: prod-master-1
       securityContext:
         fsGroup: 0
         runAsUser: 0
