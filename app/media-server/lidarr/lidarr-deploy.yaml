@@ -17,6 +17,15 @@ spec:
       labels:
         app: lidarr
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: hostname
+                operator: In
+                values:
+                - prod-master-1
       securityContext:
         fsGroup: 0
         runAsUser: 0
