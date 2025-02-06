@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- lidarr-deploy.yaml
+- lidarr-pvc.yaml
+- lidarr-svc.yaml
+- lidarr-ing.yaml
+images:
+- name: linuxserver/lidarr
+  newTag: 2.9.6
+labels:
+- includeSelectors: true
+  pairs:
+    app: lidarr

@@ -1,3 +1,10 @@
+# argocd cli install
+
+```bash
+curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+chmod +x /usr/local/bin/argocd
+```
+
 # argocd charts 
 
 ```bash
@@ -20,7 +27,7 @@ kubectl kustomize ./app/tools/ --enable-helm | kubectl apply -f -
 
 # argocd
 ```bash
-argocd login argocd.home.adaminformatika.hu --username  --password
+argocd login argocd.home.adaminformatika.hu --skip-test-tls --grpc-web --insecure --username ??? --password ???
 
 echo -n "Enter ARGOCD_APP_NAME: "; read ARGOCD_APP_NAME; argocd app create $ARGOCD_APP_NAME -f "app/media-server/$ARGOCD_APP_NAME/argocd-$ARGOCD_APP_NAME.yaml" --upsert
 ```
