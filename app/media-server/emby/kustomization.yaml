@@ -7,7 +7,7 @@ resources:
   - emby-ing.yaml
 images:
 - name: docker.io/emby/embyserver
-  newTag: 4.9.0.37
+  newTag: 4.9.0.38
 labels:
 - includeSelectors: true
   pairs:
