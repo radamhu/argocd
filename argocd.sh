@@ -47,5 +47,5 @@ if [[ "$GIT_PUSHED" != "yes" ]]; then
 fi
 
 # Create ArgoCD app with provided inputs
-argocd app create "$ARGOCD_APP_NAME" -f "app/$NS_FOLDER_NAME/argocd-$ARGOCD_APP_NAME.yaml" --upsert
+argocd app create "$ARGOCD_APP_NAME" -f "app/$NS_FOLDER_NAME/$ARGOCD_APP_NAME/argocd-$ARGOCD_APP_NAME.yaml" --upsert
 
