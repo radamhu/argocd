@@ -27,11 +27,7 @@ kubectl kustomize ./app/tools/ --enable-helm | kubectl apply -f -
 
 # argocd
 ```bash
-argocd login argocd.home.adaminformatika.hu --skip-test-tls --grpc-web --insecure --username ??? --password ???
-
-git commit every_new_changes
-
-echo -n "Enter ARGOCD_APP_NAME: "; read ARGOCD_APP_NAME; argocd app create $ARGOCD_APP_NAME -f "app/media-server/$ARGOCD_APP_NAME/argocd-$ARGOCD_APP_NAME.yaml" --upsert
+sh ./argocd.sh
 ```
 # argocd charts 
 
