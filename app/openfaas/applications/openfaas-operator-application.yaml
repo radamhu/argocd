@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: openfaas-operator
-  namespace: argocd
+  namespace: openfaas
 spec:
   destination:
     namespace: openfaas
@@ -16,7 +16,7 @@ spec:
       - name: generateBasicAuth
         value: "true"
       - name: functionNamespace
-        value: openfaas-fn
+        value: openfaas
     path: chart/openfaas
     repoURL: https://github.com/openfaas/faas-netes.git
   syncPolicy:

@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: apps-of-apps
-  namespace: argocd
+  namespace: openfaas
 spec:
   destination:
     server: https://kubernetes.default.svc
