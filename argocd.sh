@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # Prompt for ArgoCD admin user password
-read -p "Enter ARGOCD admin user password: " ARGOCD_ADMIN_PWD
+read -p "Login to ARGOCD, type your password, otherwise type no: " ARGOCD_ADMIN_PWD
 
-# Login to ArgoCd
-argocd login argocd.home.adaminformatika.hu --skip-test-tls --grpc-web --insecure --username admin --password "$ARGOCD_ADMIN_PWD"
+if [[ "$ARGOCD_ADMIN_PWD" != "no" ]]; then
+    # Login to ArgoCd
+    argocd login argocd.home.adaminformatika.hu --skip-test-tls --grpc-web --insecure --username admin --password "$ARGOCD_ADMIN_PWD"
+fi
 
 # Define the ArgoCD repository path
 ARGOCD_REPO_PATH="$HOME/Github/argocd"  # Change this to the actual path

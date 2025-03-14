@@ -1,23 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: openfaas
+  name: openfaas-functions
 spec:
   destination:
     namespace: tools
-    server: 'https://kubernetes.default.svc'
+    server: https://kubernetes.default.svc
   source:
-    path: chart/openfaas
-    repoURL: 'https://github.com/openfaas/faas-netes.git'
+    path: app/media-server/openfaas-functions
+    repoURL: https://github.com/radamhu/argocd
     targetRevision: main
-    helm:
-      parameters:
-      - name: operator.create
-        value: "true"
-      - name: generateBasicAuth
-        value: "true"
-      - name: functionNamespace
-        value: openfaas-fn
   sources: []
   project: default
   syncPolicy:
