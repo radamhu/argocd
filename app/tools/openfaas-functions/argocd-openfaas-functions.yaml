@@ -7,7 +7,7 @@ spec:
     namespace: tools
     server: https://kubernetes.default.svc
   source:
-    path: app/media-server/openfaas-functions
+    path: app/tools/openfaas-functions
     repoURL: https://github.com/radamhu/argocd
     targetRevision: main
   sources: []
