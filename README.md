@@ -14,8 +14,19 @@
 kubectl kustomize ./app/tools/ --enable-helm | kubectl apply -f -
 ```
 
-# argocd deployment
+# argocd k8s manifest deployment
 ```bash
 TBD k3s-proxmox-terraform-ansible/roles/postconfig/base_argocd/tasks/argocd-cm.yaml 
 sh ./argocd.sh
+```
+
+# argocd openfaas functions deployment sample
+
+```bash
+PASSWORD=$(kubectl get secret -n tools basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode; echo)
+echo $PASSWORD
+
+https://www.openfaas.com/blog/bring-gitops-to-your-openfaas-functions-with-argocd/
+https://rpi4cluster.com/k3s-openfaas/
+app/tools/openfaas-functions
 ```
