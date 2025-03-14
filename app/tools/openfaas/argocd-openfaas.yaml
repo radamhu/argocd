@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: n8n
+  name: openfaas
 spec:
   destination:
     namespace: tools
@@ -13,7 +13,7 @@ spec:
     helm:
       operator.create: true
       generateBasicAuth: true
-      functionNamespace: openfaas-fn
+      functionNamespace: tools
   sources: []
   project: default
   syncPolicy:
