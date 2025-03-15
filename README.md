@@ -23,10 +23,25 @@ sh ./argocd.sh
 # argocd openfaas functions deployment sample
 
 ```bash
-PASSWORD=$(kubectl get secret -n tools basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode; echo)
-echo $PASSWORD
-
 https://www.openfaas.com/blog/bring-gitops-to-your-openfaas-functions-with-argocd/
 https://rpi4cluster.com/k3s-openfaas/
-app/tools/openfaas-functions
+
+arkade install openfaas
+PASSWORD=$(kubectl get secret -n tools basic-auth -o jsonpath="{.data.basic-auth-password}" | base64 --decode; echo)
+echo -n $PASSWORD | faas-cli login --username admin --password-stdin
+
+Create new functions
+faas-cli template pull
+faas-cli template store pull python3-http
+faas-cli new --lang python3 hello-python
+
+Build functions
+faas-cli build
+
+Publish functions
+faas-cli publish
+
+argocd app create argocd-apps-of-apps -f "app/openfaas/argocd-apps-of-apps.yaml --upsert
+
+
 ```
