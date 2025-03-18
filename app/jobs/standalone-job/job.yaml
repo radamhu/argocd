@@ -1,14 +1,16 @@
 apiVersion: batch/v1
-kind: Job
+kind: CronJob
 metadata:
-  generateName: job-test-
+  name: 'myjob'
+  labels:
+    app: 'myjob'
 spec:
-  backoffLimit: 1
-  completions: 1
-  template:
+  schedule: "30 2 * * *"
+  timeZone: 'Europe/Budapest'
+  jobTemplate:
     spec:
-      containers:
-      - name: jobtest
-        image: busybox
-        command: ["sleep", "180"] 
-      restartPolicy: Never
+      template:
+        spec:
+          containers:
+            - name: myimage
+              image: docker.io/myimage:v0.1.1
