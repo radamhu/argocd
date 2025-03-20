@@ -30,7 +30,7 @@ echo "Successfully navigated to ArgoCD repository."
 # Prompt for ArgoCD app name
 read -p "Enter ARGOCD_APP_NAME: " ARGOCD_APP_NAME
 
-# Prompt for Media Server name
+# Prompt for folder name
 read -p "Enter NS_FOLDER_NAME: " NS_FOLDER_NAME
 
 # Ask if the user has already pushed changes to Git
