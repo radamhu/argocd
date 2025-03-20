@@ -65,9 +65,14 @@ data:
           weight: 41
       - Unifi:
           description: Unifi Controller
-          href: https://hassio.home.local:8443/
+          href: https://hassio.home.adaminformatika.hu:8443/
           icon: unifi.svg
           weight: 42
+      - Uptimekuma:
+          description: uptimekuma
+          href: http://uptimekuma.home.adaminformatika.hu/
+          icon: uptimekuma.svg
+          weight: 43
       - Netdata:
           description: Netdata
           href: https://app.netdata.cloud/spaces/adaminfo-space/rooms/all-nodes/
@@ -75,7 +80,7 @@ data:
           weight: 50
       - Hassio:
           description: Hassio
-          href: http://hassio.home.local:8123/lovelace/default_view
+          href: http://hassio.home.adaminformatika.hu:8123/lovelace/default_view
           icon: homeassistant.svg
           weight: 60
       - Argocd:
