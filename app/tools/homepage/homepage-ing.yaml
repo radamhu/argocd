@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: Media Server
     gethomepage.dev/group: Cluster Management
