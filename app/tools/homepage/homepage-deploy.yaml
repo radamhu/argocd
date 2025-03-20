@@ -35,6 +35,9 @@ spec:
             containerPort: 3000
             protocol: TCP
         # MountVolume.SetUp failed for volume "kube-api-access ca.crt no space left
+        env:
+          - name: HOMEPAGE_ALLOWED_HOSTS
+            value: homepage.home.adaminformatika.hu
         resources:
           limits: # you restrict the maximum amount of memory available to the pods
             memory: "1024M"
