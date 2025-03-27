@@ -1,16 +1,19 @@
 
-This is a bjw's helm based application :)
+# Homepage
+
+## This is a bjw's helm based application :)
+
 https://bjw-s.github.io/helm-charts/docs/app-template/
 
--- https://gethomepage.dev/main/installation/k8s/
+https://gethomepage.dev/main/installation/k8s/
 
-Install with Helm
+## Creating Sealed secrets
 
--- Create sealed-secrets first
+```bash
 k create secret generic tools-ns-sealed-secret --namespace=tools --dry-run=client --from-literal=sonarr-api=
 --from-literal=radarr-api=
 --from-literal=qbittorrent-pwd=
---from-literal=proxmox_api_token_id= 
+--from-literal=proxmox_api_token_id=
 --from-literal=proxmox_api_token_secret=
 --from-literal=pihole_key=
 --from-literal=unifi_username=
@@ -26,21 +29,12 @@ kubectl create -f tools-ns-sealed-secret.yaml
 
 kubectl get secret -n tools tools-ns-sealed-secret -o yaml
 
-rm ./mysecret.yaml
+```
 
--- https://akuity.io/blog/argo-cd-helm-values-files/
+## Apply Sealed secrets
 
-- Solution 1: Helm Umbrella Chart
-  - add repo https://github.com/jameswynn/helm-charts/tree/main manually to argocd project
-  - values.yaml
-  - Charts.yaml
-- Solution 2: App of Apps Pattern with Values in Application Manifest
-- Solution 3: Multiple Sources for Applications (Beta Feature)
-
-
--- Install with Kubernetes Manifests
-
-https://gethomepage.dev/latest/configs/kubernetes/#automatic-service-discovery
-
+```bash
+TODO e.g. in homepage-cm.yaml
+```
 
 
