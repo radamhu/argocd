@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - speedtest-tracker-deploy.yaml
 images:
-- name: lscr.io/linuxserver/speedtest-tracker
+- name: linuxserver/speedtest-tracker
   newTag: 1.3.0
 labels:
 - includeSelectors: true
