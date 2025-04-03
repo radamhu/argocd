@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: convertx
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: convertx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: convertx
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+        - image: c4illin/convertx
+          name: convertx
+          imagePullPolicy: Always
+          resources:
+            limits: # you restrict the maximum amount of memory available to the pods
+              memory: "1024M"
+              cpu: "500m"
+            requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+              memory: "256M"
+              cpu: "250m"
+          volumeMounts:
+            - mountPath: /app/data
+              name: convertx
+      restartPolicy: Always
+      volumes:
+        - name: convertx
+          persistentVolumeClaim:
+            claimName: convertx
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: convertx
+  labels:
+    type: config
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: convertx
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: convertx
+  type: LoadBalancer
+  # if type: LoadBalancer is enabled than comment out INGRESS section below
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: convertx
+  namespace: tools
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: convertx.home.adaminformatika.hu
+    http:
+      paths:
+      - backend:
+          service:
+            name: convertx
+            port:
+              number: 443
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - convertx.home.adaminformatika.hu
+    secretName: convertx.home.adaminformatika.hu
+
