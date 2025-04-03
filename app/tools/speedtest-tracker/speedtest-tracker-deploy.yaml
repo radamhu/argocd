@@ -1,0 +1,116 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: speedtest-tracker
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: speedtest-tracker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: speedtest-tracker
+    spec:
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 10.152.183.10
+          - 8.8.8.8
+        searches:
+          - speedtest-tracker.svc.cluster.local
+        options:
+          - name: ndots
+            value: "5"
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+        - image: lscr.io/linuxserver/speedtest-tracker
+          name: speedtest-tracker
+          imagePullPolicy: Always
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: APP_KEY
+              value: od6XDeLEtZ+LnhBRo36LHPho9fT9qZRs1Jk5jBWRqrY= # You can generate a key at https://speedtest-tracker.dev
+            - name: DISPLAY_TIMEZONE
+              value: UTC
+            - name: DB_CONNECTION
+              value: sqlite
+          resources:
+            limits: # you restrict the maximum amount of memory available to the pods
+              memory: "1024M"
+              cpu: "500m"
+            requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+              memory: "256M"
+              cpu: "250m"
+          volumeMounts:
+            - mountPath: /config
+              name: speedtest-tracker
+      restartPolicy: Always
+      volumes:
+        - name: speedtest-tracker
+          persistentVolumeClaim:
+            claimName: speedtest-tracker
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: speedtest-tracker
+  labels:
+    type: config
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: speedtest-tracker
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: speedtest-tracker
+  type: LoadBalancer
+  # if type: LoadBalancer is enabled than comment out INGRESS section below
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: speedtest-tracker
+  namespace: tools
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: speedtest-tracker.home.adaminformatika.hu
+    http:
+      paths:
+      - backend:
+          service:
+            name: speedtest-tracker
+            port:
+              number: 443
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - speedtest-tracker.home.adaminformatika.hu
+    secretName: speedtest-tracker.home.adaminformatika.hu
+
