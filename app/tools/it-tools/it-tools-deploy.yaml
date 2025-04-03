@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: it-tools
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: it-tools
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: it-tools
+    spec:
+      securityContext:
+        fsGroup: 0
+        runAsUser: 0
+      containers:
+        - image: corentinth/it-tools
+          name: it-tools
+          imagePullPolicy: Always
+          resources:
+            limits: # you restrict the maximum amount of memory available to the pods
+              memory: "1024M"
+              cpu: "500m"
+            requests: # allow you to allocate a guaranteed minimum of computing resources for the pods r
+              memory: "256M"
+              cpu: "250m"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: it-tools
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: it-tools
+  type: LoadBalancer
+  # if type: LoadBalancer is enabled than comment out INGRESS section below
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: it-tools
+  namespace: tools
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: it-tools.home.adaminformatika.hu
+    http:
+      paths:
+      - backend:
+          service:
+            name: it-tools
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - it-tools.home.adaminformatika.hu
+    secretName: it-tools.home.adaminformatika.hu
+
