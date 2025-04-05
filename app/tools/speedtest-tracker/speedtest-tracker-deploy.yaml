@@ -41,6 +41,8 @@ spec:
               value: "1000"
             - name: APP_KEY
               value: "base64:od6XDeLEtZ+LnhBRo36LHPho9fT9qZRs1Jk5jBWRqrY=" # You can generate a key at https://speedtest-tracker.dev
+            - name: SPEEDTEST_SCHEDULE
+              value: "6 */2 * * *" # (At minute 6 past every 2nd hour)
           resources:
             limits: # you restrict the maximum amount of memory available to the pods
               memory: "1024M"
