@@ -83,7 +83,7 @@ spec:
   ports:
   - port: 443
     protocol: TCP
-    targetPort: 443
+    targetPort: 80
   selector:
     app: speedtest-tracker
   type: LoadBalancer
@@ -106,7 +106,7 @@ spec:
           service:
             name: speedtest-tracker
             port:
-              number: 443
+              number: 80
         path: /
         pathType: Prefix
   tls:
