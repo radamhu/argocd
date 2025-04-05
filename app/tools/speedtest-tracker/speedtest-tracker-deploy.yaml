@@ -81,9 +81,9 @@ metadata:
   name: speedtest-tracker
 spec:
   ports:
-  - port: 80
+  - port: 443
     protocol: TCP
-    targetPort: 80
+    targetPort: 443
   selector:
     app: speedtest-tracker
   type: LoadBalancer
@@ -106,7 +106,7 @@ spec:
           service:
             name: speedtest-tracker
             port:
-              number: 80
+              number: 443
         path: /
         pathType: Prefix
   tls:
