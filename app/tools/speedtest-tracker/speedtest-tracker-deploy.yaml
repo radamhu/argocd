@@ -40,7 +40,7 @@ spec:
             - name: PGID
               value: "1000"
             - name: APP_KEY
-              value: "od6XDeLEtZ+LnhBRo36LHPho9fT9qZRs1Jk5jBWRqrY=" # You can generate a key at https://speedtest-tracker.dev
+              value: "base64:od6XDeLEtZ+LnhBRo36LHPho9fT9qZRs1Jk5jBWRqrY=" # You can generate a key at https://speedtest-tracker.dev
           resources:
             limits: # you restrict the maximum amount of memory available to the pods
               memory: "1024M"
