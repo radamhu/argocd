@@ -81,7 +81,7 @@ metadata:
   name: speedtest-tracker
 spec:
   ports:
-  - port: 443
+  - port: 80
     protocol: TCP
     targetPort: 80
   selector:
@@ -106,7 +106,7 @@ spec:
           service:
             name: speedtest-tracker
             port:
-              number: 443
+              number: 80
         path: /
         pathType: Prefix
   tls:

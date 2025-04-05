@@ -60,7 +60,7 @@ metadata:
   name: convertx
 spec:
   ports:
-  - port: 443
+  - port: 80
     protocol: TCP
     targetPort: 3000
   selector:
@@ -85,7 +85,7 @@ spec:
           service:
             name: convertx
             port:
-              number: 443
+              number: 80
         path: /
         pathType: Prefix
   tls:
