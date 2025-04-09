@@ -1,6 +1,11 @@
 # sources
 - https://gitlab.com/k3s-media/k3s-media-server/-/tree/main/media-server?ref_type=heads
 - https://github.com/bjw-s/helm-charts
+- https://github.com/gruberdev/homelab
+- https://github.com/acelinkio/argocd-homelab
+- https://github.com/crkochan/argocd-homelab
+- https://community-scripts.github.io/ProxmoxVE/
+- https://rpi4cluster.com/
 
 # kustomize deployemnt 
 ```bash
