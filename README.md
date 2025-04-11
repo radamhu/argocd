@@ -6,6 +6,7 @@
 - https://github.com/crkochan/argocd-homelab
 - https://community-scripts.github.io/ProxmoxVE/
 - https://rpi4cluster.com/
+- https://kubesearch.dev/
 
 # kustomize deployemnt 
 ```bash
