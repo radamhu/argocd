@@ -4,6 +4,11 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Dynamically Detected Homepage
+    gethomepage.dev/group: Operations
+    gethomepage.dev/icon: homepage.png
+    gethomepage.dev/name: Homepage
   name: n8n
   namespace: tools
 spec:
