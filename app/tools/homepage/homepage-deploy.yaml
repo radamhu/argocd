@@ -48,6 +48,11 @@ spec:
               secretKeyRef:
                 name: uptimekuma-api
                 key: api
+          - name: EMBY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: emby-api
+                key: api
         resources:
           limits: # you restrict the maximum amount of memory available to the pods
             memory: "1024M"

@@ -97,6 +97,19 @@ data:
           href: https://argocd.home.adaminformatika.hu/
           icon: argocd.svg
     - Media:
+      - Emby:
+          description: Emby
+          href: http://192.168.0.186/
+          icon: emby.svg
+          widget:
+            type: emby
+            url: http://192.168.0.186/
+            key: "{{EMBY_API_KEY}}"
+            enableBlocks: true # optional, defaults to false
+            enableNowPlaying: true # optional, defaults to true
+            enableUser: true # optional, defaults to false
+            showEpisodeNumber: true # optional, defaults to false
+            expandOneStreamToTwoRows: false # optional, defaults to true
       - Qbittorrent:
           description: Torrent Client
           href: http://qbittorrent.home.adaminformatika.hu/
