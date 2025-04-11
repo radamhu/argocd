@@ -4,6 +4,11 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Dynamically Detected
+    gethomepage.dev/group: Operations
+    gethomepage.dev/icon: nodered.svg
+    gethomepage.dev/name: Nodered
   name: nodered
   namespace: tools
 spec:

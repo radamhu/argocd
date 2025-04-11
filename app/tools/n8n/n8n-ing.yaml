@@ -5,10 +5,10 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     gethomepage.dev/enabled: "true"
-    gethomepage.dev/description: Dynamically Detected Homepage
+    gethomepage.dev/description: Dynamically Detected
     gethomepage.dev/group: Operations
-    gethomepage.dev/icon: homepage.png
-    gethomepage.dev/name: Homepage
+    gethomepage.dev/icon: n8n.svg
+    gethomepage.dev/name: N8N
   name: n8n
   namespace: tools
 spec:
