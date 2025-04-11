@@ -73,11 +73,6 @@ data:
           href: http://uptimekuma.home.adaminformatika.hu/
           icon: uptimekuma.svg
           weight: 43
-      - Netdata:
-          description: Netdata
-          href: https://app.netdata.cloud/spaces/adaminfo-space/rooms/all-nodes/
-          icon: netdata.svg
-          weight: 50
       - Hassio:
           description: Hassio
           href: http://hassio.home.adaminformatika.hu:8123/lovelace/default_view
@@ -88,21 +83,6 @@ data:
           href: https://argocd.home.adaminformatika.hu/
           icon: argocd.svg
           weight: 70
-      - Grafana:
-          description: Grafana
-          href: https://adaminfo.grafana.net/login/grafana_com
-          icon: grafana.svg
-          weight: 80
-      - Netalertx:
-          description: Netalertx
-          href: http://192.168.0.11:20211/
-          icon: netalertx.svg
-          weight: 90
-      - Resilio:
-          description: Resilio-client
-          href: https://127.0.0.1:8888/gui/
-          icon: resilio.png
-          weight: 100
     - Media:
       - Bazarr:
           description: Subtitle Management
@@ -114,31 +94,6 @@ data:
           href: http://qbittorrent.home.adaminformatika.hu/
           icon: qbittorrent.png
           weight: 20
-      - Sonarr:
-          description: TV Shows
-          href: http://sonarr.home.adaminformatika.hu/
-          icon: sonarr.png
-          weight: 30
-      - Radarr:
-          description: Movies
-          href: http://radarr.home.adaminformatika.hu/
-          icon: radarr.png
-          weight: 40
-      - Prowlarr:
-          description: Prowlarr
-          href: http://prowlarr.home.adaminformatika.hu/
-          icon: prowlarr.png
-          weight: 50
-      - Plex:
-          description: Plex
-          href: http://plex.home.adaminformatika.hu/
-          icon: plex.png
-          weight: 60
-      - Calibre:
-          description: Calibre
-          href: http://calibre.home.adaminformatika.hu/
-          icon: calibre.png
-          weight: 70
   widgets.yaml: |
     - kubernetes:
         cluster:
