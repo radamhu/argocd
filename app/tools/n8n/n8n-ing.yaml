@@ -6,7 +6,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     gethomepage.dev/enabled: "true"
     gethomepage.dev/description: Dynamically Detected
-    gethomepage.dev/group: Operations
+    gethomepage.dev/group: Media
     gethomepage.dev/icon: n8n.svg
     gethomepage.dev/name: N8N
   name: n8n
