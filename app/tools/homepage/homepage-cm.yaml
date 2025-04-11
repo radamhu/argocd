@@ -46,49 +46,59 @@ data:
             description: Router
             href: http://192.168.0.1
             icon: avmfritzbox.svg
-            weight: 1
         - Pihole Home:
             description: DNS Server
             href: http://192.168.0.12
             icon: adguard-home.svg
-            weight: 2
     - Server:
       - Portainer:
           description: Container Management
           href: https://localhost:9443
           icon: portainer.svg
-          weight: 30
       - Proxmox:
           description: Promox Web UI
           href: https://192.168.0.10:8006
           icon: proxmox.svg
-          weight: 41
       - Unifi:
           description: Unifi Controller
           href: https://hassio.home.adaminformatika.hu:8443/
           icon: unifi.svg
-          weight: 42
       - Uptimekuma:
           description: uptimekuma
           href: http://uptimekuma.home.adaminformatika.hu/
-          icon: uptimekuma.svg
-          weight: 43
-      - Hassio:
+          icon: uptime-kuma.svg
+          widget:
+            type: uptimekuma
+            url: http://uptimekuma.home.adaminformatika.hu/
+            slug: home
+        - Speedtest Tracker:
+            icon: librespeed.svg
+            href: https://speedtest-tracker.home.adaminformatika.hu/admin
+            description: Internet Speed Test
+            widget:
+              type: speedtest
+              url: https://speedtest-tracker.home.adaminformatika.hu/admin
+      - Home assistant:
           description: Hassio
           href: http://hassio.home.adaminformatika.hu:8123/lovelace/default_view
-          icon: homeassistant.svg
-          weight: 60
+          icon: home-assistant.svg
+          widget:
+            type: homeassistant
+            url: http://hassio.home.adaminformatika.hu:8123
+            key: "{{HOMEPAGE_VAR_HOME_ASSISTANT_API_KEY}}"
+            custom:
+              - state: sensor.thermostat_temperature
+              - state: lock.node_3
+              - state: sensor.node_3_battery_level
       - Argocd:
           description: ArgoCD
           href: https://argocd.home.adaminformatika.hu/
           icon: argocd.svg
-          weight: 70
     - Media:
       - Qbittorrent:
           description: Torrent Client
           href: http://qbittorrent.home.adaminformatika.hu/
           icon: qbittorrent.png
-          weight: 20
   widgets.yaml: |
     - kubernetes:
         cluster:
