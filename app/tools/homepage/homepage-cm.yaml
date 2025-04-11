@@ -71,13 +71,15 @@ data:
             type: uptimekuma
             url: http://uptimekuma.home.adaminformatika.hu/
             slug: home
+            key: "{{UPTIMEKUMA_API_KEY}}"
       - Speedtest Tracker:
           icon: librespeed.svg
           href: https://speedtest-tracker.home.adaminformatika.hu/admin
           description: Internet Speed Test
           widget:
             type: speedtest
-            url: https://speedtest-tracker.home.adaminformatika.hu/admin
+            url: https://speedtest-tracker.home.adaminformatika.hu/
+            key: "{{SPEEDTEST_TRACKER_API_KEY}}"
       - Home assistant:
           description: Hassio
           href: http://hassio.home.adaminformatika.hu:8123/lovelace/default_view
@@ -85,7 +87,7 @@ data:
           widget:
             type: homeassistant
             url: http://hassio.home.adaminformatika.hu:8123
-            key: "{{HOMEPAGE_VAR_HOME_ASSISTANT_API_KEY}}"
+            key: "{{HASSIO_TRACKER_API_KEY}}"
             custom:
               - state: sensor.thermostat_temperature
               - state: lock.node_3

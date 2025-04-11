@@ -38,6 +38,16 @@ spec:
         env:
           - name: HOMEPAGE_ALLOWED_HOSTS
             value: homepage.home.adaminformatika.hu
+          - name: SPEEDTEST_TRACKER_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: speedtest-tracker-api
+                key: api
+          - name: UPTIMEKUMA_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: uptimekuma-api
+                key: api
         resources:
           limits: # you restrict the maximum amount of memory available to the pods
             memory: "1024M"
