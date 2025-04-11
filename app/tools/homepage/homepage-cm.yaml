@@ -84,11 +84,6 @@ data:
           icon: argocd.svg
           weight: 70
     - Media:
-      - Bazarr:
-          description: Subtitle Management
-          href: http://bazarr.home.adaminformatika.hu/
-          icon: bazarr.png
-          weight: 10
       - Qbittorrent:
           description: Torrent Client
           href: http://qbittorrent.home.adaminformatika.hu/
