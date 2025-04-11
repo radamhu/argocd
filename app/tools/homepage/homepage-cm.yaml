@@ -71,13 +71,13 @@ data:
             type: uptimekuma
             url: http://uptimekuma.home.adaminformatika.hu/
             slug: home
-        - Speedtest Tracker:
-            icon: librespeed.svg
-            href: https://speedtest-tracker.home.adaminformatika.hu/admin
-            description: Internet Speed Test
-            widget:
-              type: speedtest
-              url: https://speedtest-tracker.home.adaminformatika.hu/admin
+      - Speedtest Tracker:
+          icon: librespeed.svg
+          href: https://speedtest-tracker.home.adaminformatika.hu/admin
+          description: Internet Speed Test
+          widget:
+            type: speedtest
+            url: https://speedtest-tracker.home.adaminformatika.hu/admin
       - Home assistant:
           description: Hassio
           href: http://hassio.home.adaminformatika.hu:8123/lovelace/default_view
