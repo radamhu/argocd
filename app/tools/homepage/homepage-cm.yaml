@@ -48,8 +48,13 @@ data:
             icon: avmfritzbox.svg
         - Pihole Home:
             description: DNS Server
-            href: http://192.168.0.12
+            href: http://192.168.0.12/admin
             icon: adguard-home.svg
+            widget:
+              type: pihole
+              url: http://192.168.0.12/admin
+              version: 6 # required if running v6 or higher, defaults to 5
+              key: "{{PIHOLE_API_KEY}}"
     - Server:
       - Portainer:
           description: Container Management

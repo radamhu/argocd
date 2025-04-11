@@ -53,6 +53,11 @@ spec:
               secretKeyRef:
                 name: emby-api
                 key: api
+          - name: PIHOLE_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: pihole-api
+                key: api
         resources:
           limits: # you restrict the maximum amount of memory available to the pods
             memory: "1024M"
