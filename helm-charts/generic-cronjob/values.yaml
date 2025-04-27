@@ -60,7 +60,7 @@ hostPaths: []
 envsubst:
   image:
     repository: nixery.dev/shell/envsubst
-    tag: "latest@sha256:620457a1be48fbd0b33386389721f0dca5f5f10f7d9f55c201f6bc84fa572ab4"
+    tag: "latest@sha256:91049f394139bc820d99385583c8af64d1b8907bb853a2f591c6d10ab9ba5ffa"
   files: []
   # - src:
   #   dest:
