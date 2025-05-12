@@ -7,7 +7,7 @@ resources:
 - n8n-ing.yaml
 images:
 - name: n8nio/n8n
-  newTag: 1.92.2
+  newTag: 1.93.0
 labels:
 - includeSelectors: true
   pairs:
