@@ -7,7 +7,7 @@ resources:
 - changedetection-svc.yaml
 images:
 - name: ghcr.io/dgtlmoon/changedetection.io
-  newTag: 0.49.16
+  newTag: 0.49.17
 labels:
 - includeSelectors: true
   pairs:
