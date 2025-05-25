@@ -7,7 +7,7 @@ resources:
 - prowlarr-ing.yaml
 images:
 - name: pmialon/prowlarr
-  newTag: 1.35.1.5034
+  newTag: 1.36.3.5071
 labels:
 - includeSelectors: true
   pairs:
