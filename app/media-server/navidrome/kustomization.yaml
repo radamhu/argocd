@@ -7,7 +7,7 @@ resources:
 - navidrome-ing.yaml
 images:
 - name: deluan/navidrome
-  newTag: 0.56.1
+  newTag: 0.57.0
 labels:
 - includeSelectors: true
   pairs:
