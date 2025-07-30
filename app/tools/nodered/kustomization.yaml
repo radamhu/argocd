@@ -7,7 +7,7 @@ resources:
 - nodered-ing.yaml
 images:
 - name: nodered/node-red
-  newTag: 4.0.9-22
+  newTag: 4.1.0-22
 labels:
 - includeSelectors: true
   pairs:
