@@ -8,7 +8,7 @@ resources:
 - kometa-tv-cm.yaml
 images:
 - name: ghcr.io/linuxserver/kometa
-  newTag: 2.2.1
+  newTag: 2.2.2
 labels:
 - includeSelectors: true
   pairs:
