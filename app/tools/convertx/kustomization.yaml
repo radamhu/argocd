@@ -4,7 +4,7 @@ resources:
 - convertx-deploy.yaml
 images:
 - name: c4illin/convertx
-  newTag: v0.14.1
+  newTag: v0.15.1
 labels:
 - includeSelectors: true
   pairs:
