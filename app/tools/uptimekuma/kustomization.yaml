@@ -7,7 +7,7 @@ resources:
 - uptimekuma-ing.yaml
 images:
 - name: louislam/uptime-kuma
-  newTag: 1.23.17
+  newTag: 2.0.1
 labels:
 - includeSelectors: true
   pairs:
