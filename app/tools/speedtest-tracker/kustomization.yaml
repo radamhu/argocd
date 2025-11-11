@@ -4,7 +4,7 @@ resources:
 - speedtest-tracker-deploy.yaml
 images:
 - name: linuxserver/speedtest-tracker
-  newTag: 1.7.1
+  newTag: 1.7.2
 labels:
 - includeSelectors: true
   pairs:
