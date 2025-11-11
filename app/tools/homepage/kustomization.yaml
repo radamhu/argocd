@@ -11,7 +11,7 @@ resources:
 - homepage-svc.yaml
 images:
 - name: ghcr.io/gethomepage/homepage
-  newTag: v1.6.1
+  newTag: v1.7.0
 labels:
 - includeSelectors: true
   pairs:
