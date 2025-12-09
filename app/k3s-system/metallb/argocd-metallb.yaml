@@ -1,31 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sealed-secrets
+  name: metallb
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io/foreground
 spec:
   project: default
   source:
-    repoURL: https://bitnami-labs.github.io/sealed-secrets
-    chart: sealed-secrets
-    targetRevision: 2.17.1
+    repoURL: https://metallb.github.io/metallb
+    chart: metallb
+    targetRevision: 0.15.3
     helm:
       values: |
-        fullnameOverride: sealed-secrets-controller
-        resources:
-          requests:
-            cpu: 50m
-            memory: 64Mi
-          limits:
-            memory: 256Mi
+        speaker:
+          frr:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
-    namespace: kube-system
+    namespace: metallb-system
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
+      - CreateNamespace=true
       - ServerSideApply=true

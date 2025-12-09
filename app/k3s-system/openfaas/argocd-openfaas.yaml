@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openfaas
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: default
+  source:
+    repoURL: https://openfaas.github.io/faas-netes
+    chart: openfaas
+    targetRevision: 14.2.131
+    helm:
+      values: |
+        functionNamespace: openfaas-fn
+        generateBasicAuth: true
+        serviceType: ClusterIP
+        clusterRole: true
+        createCRDs: true
+        operator:
+          create: false
+        gateway:
+          replicas: 1
+        queueWorker:
+          replicas: 1
+        prometheus:
+          create: true
+        alertmanager:
+          create: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openfaas
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
