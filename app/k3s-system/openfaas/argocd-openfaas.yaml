@@ -15,7 +15,7 @@ spec:
       values: |
         functionNamespace: openfaas-fn
         generateBasicAuth: true
-        serviceType: ClusterIP
+        serviceType: LoadBalancer
         clusterRole: true
         createCRDs: true
         operator:
