@@ -15,7 +15,7 @@ spec:
       values: |
         functionNamespace: openfaas-fn
         generateBasicAuth: true
-        serviceType: LoadBalancer
+        serviceType: ClusterIP
         clusterRole: true
         createCRDs: true
         operator:
@@ -28,6 +28,19 @@ spec:
           create: true
         alertmanager:
           create: false
+        ingress:
+          enabled: true
+          hosts:
+          - host: openfaas.local
+            http:
+              paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: gateway
+                    port:
+                      number: 8080
   destination:
     server: https://kubernetes.default.svc
     namespace: openfaas
