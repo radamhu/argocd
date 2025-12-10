@@ -2,12 +2,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: hello-flask
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
 spec:
   destination:
     namespace: hello-flask
     server: 'https://kubernetes.default.svc'
   source:
-    path: app/hello-flask
+    path: app/demo/hello-flask
     repoURL: 'https://github.com/radamhu/argocd'
     targetRevision: main
   sources: []
