@@ -29,18 +29,7 @@ spec:
         alertmanager:
           create: false
         ingress:
-          enabled: true
-          hosts:
-          - host: openfaas.local
-            http:
-              paths:
-              - path: /
-                pathType: Prefix
-                backend:
-                  service:
-                    name: gateway
-                    port:
-                      number: 8080
+          enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: openfaas

@@ -1,0 +1,26 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: openfaas-stripprefix
+  namespace: openfaas
+spec:
+  stripPrefix:
+    prefixes:
+      - /openfaas
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: openfaas
+  namespace: openfaas
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/openfaas`)
+      kind: Rule
+      middlewares:
+        - name: openfaas-stripprefix
+      services:
+        - name: gateway
+          port: 8080
