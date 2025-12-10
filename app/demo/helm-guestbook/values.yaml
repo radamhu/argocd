@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/argoproj/argocd-example-apps/guestbook
-  tag: latest
+  repository: nginx
+  tag: stable
   pullPolicy: IfNotPresent
 
 containerPort: 80
