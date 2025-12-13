@@ -43,37 +43,132 @@ argocd/
 
 ## Security & Secrets Management
 
-This repository uses **Sealed Secrets** for secure secret management. Secrets are encrypted client-side and can be safely committed to Git.
+This repository uses **Sealed Secrets** for secure GitOps secret management. Secrets are encrypted client-side and safe to commit to Git.
 
-### Quick Start - Create a Sealed Secret
+### Core Principles
+
+- ✅ Never commit plaintext secrets to Git
+- ✅ Use Sealed Secrets for encryption
+- ✅ Rotate credentials every 90 days
+- ✅ Pre-commit hooks prevent leaks
+
+### Quick Start - Create GHCR Sealed Secret
 
 ```bash
-# For GHCR (GitHub Container Registry) credentials
+# Automated (recommended)
 ./scripts/create-ghcr-sealed-secret.sh
 
-# Or manually
+# Manual
 kubectl create secret docker-registry ghcr-secret \
   --docker-server=ghcr.io \
   --docker-username=<username> \
   --docker-password=<token> \
+  --namespace=default \
   --dry-run=client -o yaml | \
   kubeseal --controller-name=sealed-secrets-controller \
   --controller-namespace=kube-system \
   --format=yaml > app/demo/dentari/ghcr-sealed-secret.yaml
+
+# Commit and deploy
+git add app/demo/dentari/ghcr-sealed-secret.yaml
+git commit -m "Add GHCR sealed secret"
+git push
 ```
 
-### Documentation
+### Prerequisites
 
-- **[SECURITY_INCIDENT_RESPONSE.md](SECURITY_INCIDENT_RESPONSE.md)** - Incident response procedures
-- **[SECRETS_MANAGEMENT.md](SECRETS_MANAGEMENT.md)** - Comprehensive secrets management guide
-- **[app/demo/dentari/README.md](app/demo/dentari/README.md)** - Dentari app sealed secrets setup
+- Sealed Secrets controller (already deployed at `app/k3s-system/sealed-secrets`)
+- kubeseal CLI (script auto-installs)
+- kubectl connected to cluster
+- GitHub token with `read:packages` and `write:packages` scopes
 
-### Key Principles
+**Create GitHub Token:** https://github.com/settings/tokens/new
 
-- ✅ Never commit plaintext secrets
-- ✅ Use sealed secrets for GitOps
-- ✅ Rotate credentials every 90 days
-- ✅ Pre-commit hooks prevent secret leaks
+### How Sealed Secrets Work
+
+1. **Encrypt** - `kubeseal` encrypts secrets using controller's public key
+2. **Commit** - Encrypted SealedSecret resources safe to commit to Git
+3. **Deploy** - ArgoCD syncs SealedSecret to cluster
+4. **Decrypt** - Controller decrypts and creates standard Kubernetes Secret
+5. **Use** - Applications reference the Secret normally
+
+### Verification Commands
+
+```bash
+# Check sealed secret
+kubectl get sealedsecret ghcr-secret -n default
+
+# Check actual secret (created by controller)
+kubectl get secret ghcr-secret -n default
+
+# Check deployment
+kubectl get pods -n default | grep dentari
+
+# View controller logs
+kubectl logs -n kube-system -l name=sealed-secrets-controller
+```
+
+### Token Rotation (Every 90 Days)
+
+```bash
+# 1. Create new GitHub token
+# 2. Run script
+./scripts/create-ghcr-sealed-secret.sh
+
+# 3. Commit and push
+git add app/demo/dentari/ghcr-sealed-secret.yaml
+git commit -m "chore: rotate GHCR token"
+git push
+
+# 4. Revoke old token at https://github.com/settings/tokens
+```
+
+### Troubleshooting
+
+**Sealed Secret Won't Decrypt:**
+```bash
+kubectl logs -n kube-system -l name=sealed-secrets-controller
+kubectl get events -n default --sort-by='.lastTimestamp'
+```
+
+**Image Pull Errors:**
+```bash
+kubectl describe pod <dentari-pod-name> -n default
+kubectl get secret ghcr-secret -n default -o yaml
+```
+
+**Re-seal Secret:**
+```bash
+kubectl delete sealedsecret ghcr-secret -n default
+./scripts/create-ghcr-sealed-secret.sh
+git add app/demo/dentari/ghcr-sealed-secret.yaml
+git commit -m "fix: re-seal GHCR secret"
+git push
+```
+
+### Security Features
+
+**Prevention:**
+- `.gitignore` excludes secret files
+- Pre-commit hooks detect private keys
+- Template files with no credentials
+
+**Detection:**
+- GitGuardian monitoring active
+- Pre-commit validation on every commit
+
+**Response:**
+- Incident procedures: [SECURITY_INCIDENT_RESPONSE.md](SECURITY_INCIDENT_RESPONSE.md)
+- Rotation scripts available
+- Git history cleanup tools
+
+### Alternative Solutions
+
+**External Secrets Operator** - For AWS/GCP/Azure secret managers
+**ArgoCD Vault Plugin** - For HashiCorp Vault
+**SOPS** - For encrypted files in Git
+
+See `app/k3s-system/external-secrets-operator/` for setup
 
 ---
 
