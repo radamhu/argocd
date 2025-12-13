@@ -41,6 +41,42 @@ argocd/
 
 ---
 
+## Security & Secrets Management
+
+This repository uses **Sealed Secrets** for secure secret management. Secrets are encrypted client-side and can be safely committed to Git.
+
+### Quick Start - Create a Sealed Secret
+
+```bash
+# For GHCR (GitHub Container Registry) credentials
+./scripts/create-ghcr-sealed-secret.sh
+
+# Or manually
+kubectl create secret docker-registry ghcr-secret \
+  --docker-server=ghcr.io \
+  --docker-username=<username> \
+  --docker-password=<token> \
+  --dry-run=client -o yaml | \
+  kubeseal --controller-name=sealed-secrets-controller \
+  --controller-namespace=kube-system \
+  --format=yaml > app/demo/dentari/ghcr-sealed-secret.yaml
+```
+
+### Documentation
+
+- **[SECURITY_INCIDENT_RESPONSE.md](SECURITY_INCIDENT_RESPONSE.md)** - Incident response procedures
+- **[SECRETS_MANAGEMENT.md](SECRETS_MANAGEMENT.md)** - Comprehensive secrets management guide
+- **[app/demo/dentari/README.md](app/demo/dentari/README.md)** - Dentari app sealed secrets setup
+
+### Key Principles
+
+- ✅ Never commit plaintext secrets
+- ✅ Use sealed secrets for GitOps
+- ✅ Rotate credentials every 90 days
+- ✅ Pre-commit hooks prevent secret leaks
+
+---
+
 ## ArgoCD Deployment
 
 ### Initial Setup

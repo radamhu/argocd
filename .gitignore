@@ -4,6 +4,30 @@
 .env
 .venv
 
+# Secrets and credentials - DO NOT COMMIT
+*secret.yaml
+!*sealed-secret.yaml
+!*-secret.yaml.template
+!*-secret-template.yaml
+*.env
+*.env.local
+.env
+.env.*
+credentials.json
+*-credentials.json
+**/secrets/
+**/*-key.pem
+**/*.key
+**/*.pem
+**/*.p12
+**/*.pfx
+sealed-secrets-key*.yaml
+*.secret
+*.token
+*.pwd
+*.password
+**/sa-token.yaml
+
 # IDE ignored files
 .idea/
 *.iml
@@ -156,5 +180,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-
