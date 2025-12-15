@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: botkube
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: default
+  source:
+    repoURL: https://charts.botkube.io
+    chart: botkube
+    targetRevision: v1.12.0
+    helm:
+      values: |
+        settings:
+          clusterName: k3s
+
+        communications:
+          'default-group':
+            discord:
+              enabled: true
+              botID: '1222662603940167770'
+              channels:
+                'default':
+                  id: '1222665347098869790'
+                  bindings:
+                    executors:
+                      - k8s-default-tools
+                    sources:
+                      - k8s-err-events
+                      - k8s-recommendation-events
+
+        # Inject token via environment variable override
+        extraEnv:
+          - name: BOTKUBE_COMMUNICATIONS_DEFAULT-GROUP_DISCORD_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: botkube-discord
+                key: token
+
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: botkube
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
