@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metallb-watchdog
+  namespace: metallb-system
+  labels:
+    app: metallb-watchdog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metallb-watchdog
+  template:
+    metadata:
+      labels:
+        app: metallb-watchdog
+    spec:
+      serviceAccountName: metallb-watchdog
+      terminationGracePeriodSeconds: 0
+      volumes:
+        - name: kubectl-bin
+          emptyDir: {}
+      initContainers:
+        - name: install-kubectl
+          image: bitnami/kubectl:latest
+          command: ["cp", "/opt/bitnami/kubectl/bin/kubectl", "/data/kubectl"]
+          volumeMounts:
+            - name: kubectl-bin
+              mountPath: /data
+      containers:
+        - name: watchdog
+          image: alpine:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              # Add kubectl to path
+              export PATH=$PATH:/data
+
+              # Target VIP to monitor (ArgoCD Server LoadBalancer IP)
+              TARGET_IP="192.168.0.103"
+
+              echo "Starting MetalLB Watchdog monitoring $TARGET_IP..."
+
+              while true; do
+                # Ping check (3 packets, 5 sec timeout)
+                if ! ping -c 3 -W 5 "$TARGET_IP" > /dev/null 2>&1; then
+                  echo "[$(date)] Detection: Connectivity to $TARGET_IP failed!"
+
+                  # Double check after 5 seconds to reduce false positives
+                  sleep 5
+                  if ! ping -c 3 -W 5 "$TARGET_IP" > /dev/null 2>&1; then
+                    echo "[$(date)] CONFIRMED: Connectivity lost. Restarting MetalLB speakers..."
+
+                    kubectl delete pod -n metallb-system -l app.kubernetes.io/component=speaker
+
+                    echo "[$(date)] Speaker restart triggered. Cooling down for 60s..."
+                    sleep 60
+                  else
+                    echo "[$(date)] False alarm: Connectivity restored on second try."
+                  fi
+                else
+                  # Healthy - silent or verbose debug
+                  # echo "[$(date)] Health check passed."
+                  :
+                fi
+
+                # Check every 30 seconds
+                sleep 30
+              done
+          volumeMounts:
+            - name: kubectl-bin
+              mountPath: /data

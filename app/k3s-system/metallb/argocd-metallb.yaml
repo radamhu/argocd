@@ -7,15 +7,20 @@ metadata:
     - resources-finalizer.argocd.argoproj.io/foreground
 spec:
   project: default
-  source:
-    repoURL: https://metallb.github.io/metallb
-    chart: metallb
-    targetRevision: 0.15.3
-    helm:
-      values: |
-        speaker:
-          frr:
-            enabled: false
+  sources:
+    - repoURL: https://metallb.github.io/metallb
+      chart: metallb
+      targetRevision: 0.15.3
+      helm:
+        values: |
+          speaker:
+            frr:
+              enabled: false
+    - repoURL: "https://github.com/radamhu/argocd.git"
+      targetRevision: main
+      path: app/k3s-system/metallb
+      directory:
+        include: "{metallb-config.yaml,metallb-watchdog-*.yaml}"
   destination:
     server: https://kubernetes.default.svc
     namespace: metallb-system

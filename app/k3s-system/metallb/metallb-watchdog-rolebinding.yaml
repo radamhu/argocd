@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: metallb-watchdog
+  namespace: metallb-system
+subjects:
+  - kind: ServiceAccount
+    name: metallb-watchdog
+    namespace: metallb-system
+roleRef:
+  kind: Role
+  name: metallb-watchdog
+  apiGroup: rbac.authorization.k8s.io
