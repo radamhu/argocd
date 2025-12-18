@@ -45,13 +45,40 @@ spec:
 
               if 'users' not in existing_tables:
                   print("📋 Creating users table...")
-                  schema_path = Path("/app/data/schema/users.sql")
-                  if not schema_path.exists():
-                      print(f"❌ Schema file not found: {schema_path}")
-                      conn.close()
-                      exit(1)
-                  with open(schema_path, "r") as f:
-                      cursor.executescript(f.read())
+                  schema_sql = """
+                  CREATE TABLE IF NOT EXISTS users (
+                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                      username TEXT UNIQUE NOT NULL,
+                      email TEXT UNIQUE NOT NULL,
+                      password_hash TEXT NOT NULL,
+                      name TEXT NOT NULL,
+                      role TEXT NOT NULL CHECK(role IN ('owner', 'courier', 'lab_manager', 'accountant')),
+                      is_active BOOLEAN DEFAULT TRUE,
+                      courier_name TEXT,
+                      last_login_at TIMESTAMP,
+                      failed_login_attempts INTEGER DEFAULT 0,
+                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                  );
+                  CREATE TABLE IF NOT EXISTS user_sessions (
+                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                      user_id INTEGER NOT NULL,
+                      session_token TEXT UNIQUE NOT NULL,
+                      login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                      logout_at TIMESTAMP,
+                      ip_address TEXT,
+                      user_agent TEXT,
+                      success BOOLEAN DEFAULT TRUE,
+                      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                  );
+                  CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+                  CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+                  CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+                  CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active);
+                  CREATE INDEX IF NOT EXISTS idx_sessions_user ON user_sessions(user_id);
+                  CREATE INDEX IF NOT EXISTS idx_sessions_token ON user_sessions(session_token);
+                  """
+                  cursor.executescript(schema_sql)
                   print("✅ Schema created")
 
               users = [
