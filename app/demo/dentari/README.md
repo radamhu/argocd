@@ -1,92 +1,234 @@
-# Dentari Application - Sealed Secrets Setup
+# Dentari Application - K3s Deployment
 
-This directory contains Kubernetes manifests for the Dentari application deployment, including sealed secrets for secure credential management.
+This directory contains Kubernetes manifests for the Dentari application deployment with OpenTelemetry observability.
+
+## Architecture
+
+```
+┌─────────────────┐
+│   Dentari App   │
+│   (Streamlit)   │
+└────────┬────────┘
+         │ OTLP (gRPC:4317)
+         ▼
+┌─────────────────┐
+│ OTEL Collector  │
+│  (in cluster)   │
+└────────┬────────┘
+         │ OTLP/HTTPS
+         ▼
+┌─────────────────┐
+│ Grafana Cloud   │
+│  (Loki, Tempo)  │
+└─────────────────┘
+```
+
+## Components
+
+### Application Resources
+- **deployment.yaml** - Dentari application deployment
+- **service.yaml** - LoadBalancer service (MetalLB)
+- **pvc.yaml** - Persistent volume claims (data, cache, logs)
+- **ingress.yaml** - Ingress configuration (Traefik)
+
+### OpenTelemetry Resources
+- **otel-collector-deployment.yaml** - OTEL Collector deployment
+- **otel-collector-service.yaml** - OTEL Collector service (ClusterIP)
+- **otel-collector-configmap.yaml** - OTEL Collector configuration
+- **otel-collector-secret.yaml** - Grafana Cloud credentials template
+- **otel-collector-sealed-secret.yaml** - Sealed secret (to be created)
+
+### Sealed Secrets
+- **ghcr-sealed-secret.yaml** - GitHub Container Registry credentials (to be created)
+- **secret.yaml** - Legacy OTEL configuration template (deprecated)
 
 ## Sealed Secrets
 
 This deployment uses [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) for secure secret management. The sealed-secrets controller is already deployed in the cluster via ArgoCD (`app/k3s-system/sealed-secrets`).
-
-### Current Secrets
-
-1. **ghcr-sealed-secret.yaml** - GitHub Container Registry credentials (to be created)
-2. **secret.yaml** - OpenTelemetry configuration template
 
 ## Setup Instructions
 
 ### Prerequisites
 
 - kubectl configured and connected to the cluster
-- kubeseal CLI installed (installed automatically by the script)
-- GitHub Personal Access Token with `read:packages` and `write:packages` scopes
+- kubeseal CLI installed
+- GitHub Personal Access Token with `read:packages` scope
+- Grafana Cloud account (optional, for observability)
 
-### Creating the GHCR Sealed Secret
-
-#### Option 1: Using the provided script (Recommended)
+### Step 1: Create GHCR Sealed Secret
 
 ```bash
 cd /home/ferko/Documents/argocd
 ./scripts/create-ghcr-sealed-secret.sh
 ```
 
-The script will:
-1. Prompt for your GitHub username and token
-2. Verify cluster connectivity
-3. Create the sealed secret
-4. Save it to `app/demo/dentari/ghcr-sealed-secret.yaml`
+This creates: `app/demo/dentari/ghcr-sealed-secret.yaml`
 
-#### Option 2: Manual creation
+### Step 2: Create Grafana Cloud Sealed Secret (Optional)
+
+If you want observability with Grafana Cloud:
 
 ```bash
-# Create the sealed secret manually
-kubectl create secret docker-registry ghcr-secret \
-  --docker-server=ghcr.io \
-  --docker-username=<your-github-username> \
-  --docker-password=<your-github-token> \
-  --namespace=default \
-  --dry-run=client -o yaml | \
-  kubeseal --controller-name=sealed-secrets-controller \
-  --controller-namespace=kube-system \
-  --format=yaml > app/demo/dentari/ghcr-sealed-secret.yaml
+cd /home/ferko/Documents/argocd
+./scripts/create-grafana-otel-sealed-secret.sh
 ```
 
-### Deploying the Sealed Secret
+This creates: `app/demo/dentari/otel-collector-sealed-secret.yaml`
 
-Once created, commit and push the sealed secret:
+**Note**: If you skip this step, you can still deploy but OpenTelemetry will be disabled.
+
+### Step 3: Deploy to K3s
+
+#### Option A: Using ArgoCD (Recommended)
+
+```bash
+# Create ArgoCD application
+kubectl apply -f ../../argocd-apps/demo/argocd-dentari.yaml
+
+# ArgoCD will automatically sync and deploy all resources
+```
+
+#### Option B: Manual kubectl apply
+
+```bash
+cd app/demo/dentari
+
+# Apply in order:
+kubectl apply -f pvc.yaml
+kubectl apply -f ghcr-sealed-secret.yaml
+
+# Apply OTEL resources (if using Grafana Cloud)
+kubectl apply -f otel-collector-sealed-secret.yaml  # or otel-collector-secret.yaml (template)
+kubectl apply -f otel-collector-configmap.yaml
+kubectl apply -f otel-collector-deployment.yaml
+kubectl apply -f otel-collector-service.yaml
+
+# Apply application resources
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+kubectl apply -f ingress.yaml
+```
+
+### Step 4: Commit Sealed Secrets to Git
 
 ```bash
 cd /home/ferko/Documents/argocd
 
-# Add the sealed secret
+# Add the sealed secrets
 git add app/demo/dentari/ghcr-sealed-secret.yaml
-
-# Remove the template (optional, after sealed secret is working)
-git rm app/demo/dentari/ghcr-secret.yaml
+git add app/demo/dentari/otel-collector-sealed-secret.yaml  # if created
 
 # Commit and push
-git commit -m "Add GHCR sealed secret for Dentari deployment"
+git commit -m "Add sealed secrets for Dentari deployment"
 git push
 ```
 
-ArgoCD will automatically:
-1. Detect the new sealed secret
-2. Apply it to the cluster
-3. The sealed-secrets controller will decrypt it
-4. Create the actual Kubernetes secret
-5. The deployment will use it for pulling images
+ArgoCD will automatically sync and apply the changes.
 
-### Verification
+## Verification
+
+### Check Deployment Status
 
 ```bash
-# Check if the sealed secret was created
-kubectl get sealedsecret ghcr-secret -n default
+# Check all resources
+kubectl get all -l app=dentari
+kubectl get all -l app=otel-collector
 
-# Check if the actual secret was created by the controller
-kubectl get secret ghcr-secret -n default
+# Check pods are running
+kubectl get pods | grep -E 'dentari|otel-collector'
 
-# Verify the deployment can pull images
-kubectl get pods -n default | grep dentari
-kubectl describe pod <dentari-pod-name> -n default
+# Check logs
+kubectl logs -l app=dentari --tail=50 -f
+kubectl logs -l app=otel-collector --tail=50 -f
 ```
+
+### Verify OpenTelemetry
+
+```bash
+# Check OTEL collector health
+kubectl exec -it deployment/otel-collector -- wget -O- http://localhost:13133/
+
+# Check OTEL collector metrics
+kubectl port-forward svc/otel-collector 8888:8888
+curl http://localhost:8888/metrics
+
+# Verify Dentari can reach collector
+kubectl exec -it deployment/dentari -- wget -O- http://otel-collector:4317
+```
+
+### Access Application
+
+```bash
+# Via LoadBalancer (if MetalLB configured)
+echo "http://$(kubectl get svc dentari -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):8501"
+
+# Via Ingress (if configured)
+echo "http://dentari.local"  # or your ingress host
+```
+
+## Configuration
+
+### OpenTelemetry Options
+
+#### Option 1: Disabled (No Observability)
+
+Set in [deployment.yaml](deployment.yaml):
+
+```yaml
+env:
+  - name: OTEL_ENABLED
+    value: "false"
+```
+
+No OTEL collector needed. Application uses file and console logging only.
+
+#### Option 2: Local Collector → Grafana Cloud (Recommended)
+
+This is the **current configuration**:
+
+```yaml
+env:
+  - name: OTEL_ENABLED
+    value: "true"
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "http://otel-collector:4317"
+```
+
+Requires:
+- OTEL collector deployed (otel-collector-*.yaml)
+- Grafana Cloud credentials in otel-collector-secret
+
+Benefits:
+- Centralized telemetry processing
+- Batching and retry logic
+- Multiple apps can share one collector
+- Reduced memory in application pods
+
+#### Option 3: Direct to Grafana Cloud
+
+Alternative configuration (not recommended):
+
+```yaml
+env:
+  - name: OTEL_ENABLED
+    value: "true"
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    value: "https://otlp-gateway-prod-eu-west-0.grafana.net/otlp"
+  - name: OTEL_EXPORTER_OTLP_HEADERS
+    valueFrom:
+      secretKeyRef:
+        name: dentari-grafana-secret
+        key: authorization
+```
+
+Requires:
+- Grafana Cloud credentials in application secret
+- No OTEL collector needed
+
+Drawbacks:
+- Each pod connects directly (more connections)
+- No batching/retry in collector
+- Credentials duplicated per app
 
 ## How Sealed Secrets Work
 
@@ -111,9 +253,10 @@ kubectl describe pod <dentari-pod-name> -n default
 │ GitHub Repository (argocd)                  │
 │ ├── app/demo/dentari/                       │
 │ │   ├── deployment.yaml                     │
+│ │   ├── otel-collector-deployment.yaml      │
 │ │   ├── ghcr-sealed-secret.yaml (encrypted) │
-│ │   ├── service.yaml                        │
-│ │   └── ingress.yaml                        │
+│ │   ├── otel-sealed-secret.yaml (encrypted) │
+│ │   └── ...                                 │
 └─────────────────┬───────────────────────────┘
                   │
                   │ ArgoCD syncs
@@ -124,26 +267,30 @@ kubectl describe pod <dentari-pod-name> -n default
 │ ┌─────────────────────────────────────────┐ │
 │ │ Sealed Secrets Controller               │ │
 │ │ (kube-system namespace)                 │ │
-│ │                                         │ │
-│ │ Watches: SealedSecret resources         │ │
-│ │ Decrypts → Creates: Secret resources    │ │
+│ │ Decrypts → Creates Secrets              │ │
 │ └─────────────────────────────────────────┘ │
 │                  │                          │
-│                  │ Creates                  │
 │                  ↓                          │
-│ ┌─────────────────────────────────────────┐ │
-│ │ Secret: ghcr-secret (default namespace) │ │
-│ │ Type: kubernetes.io/dockerconfigjson    │ │
-│ └─────────────────────────────────────────┘ │
-│                  │                          │
-│                  │ Referenced by            │
-│                  ↓                          │
-│ ┌─────────────────────────────────────────┐ │
-│ │ Deployment: dentari                     │ │
-│ │ - imagePullSecrets: ghcr-secret         │ │
-│ │ - Pulls: ghcr.io/radamhu/dentari:latest │ │
-│ └─────────────────────────────────────────┘ │
-└─────────────────────────────────────────────┘
+│ ┌──────────────┐   ┌─────────────────────┐ │
+│ │ ghcr-secret  │   │ otel-collector-     │ │
+│ │              │   │ secret              │ │
+│ └──────────────┘   └─────────────────────┘ │
+│         │                     │             │
+│         │                     │             │
+│         ↓                     ↓             │
+│ ┌─────────────┐       ┌──────────────────┐ │
+│ │  Dentari    │──────→│ OTEL Collector   │ │
+│ │  (app)      │ :4317 │                  │ │
+│ └─────────────┘       └────────┬─────────┘ │
+│                                │           │
+└────────────────────────────────┼───────────┘
+                                 │
+                                 │ OTLP/HTTPS
+                                 ↓
+                        ┌─────────────────┐
+                        │ Grafana Cloud   │
+                        │ (Loki, Tempo)   │
+                        └─────────────────┘
 ```
 
 ## Troubleshooting
@@ -155,7 +302,7 @@ kubectl describe pod <dentari-pod-name> -n default
 kubectl logs -n kube-system -l name=sealed-secrets-controller
 
 # Check if the SealedSecret exists
-kubectl get sealedsecret ghcr-secret -n default -o yaml
+kubectl get sealedsecret -n default
 
 # Check events
 kubectl get events -n default --sort-by='.lastTimestamp'

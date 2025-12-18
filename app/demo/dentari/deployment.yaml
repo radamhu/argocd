@@ -82,22 +82,14 @@ spec:
             - name: DEPLOYMENT_TIER
               value: "standard"
             # OpenTelemetry configuration
+            # App sends to local otel-collector, which forwards to Grafana Cloud
             - name: RUNNING_IN_DOCKER
               value: "true"
             - name: OTEL_ENABLED
               value: "true"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              valueFrom:
-                secretKeyRef:
-                  name: dentari-otel-secret
-                  key: endpoint
-                  optional: true
-            - name: OTEL_EXPORTER_OTLP_HEADERS
-              valueFrom:
-                secretKeyRef:
-                  name: dentari-otel-secret
-                  key: headers
-                  optional: true
+              value: "http://otel-collector:4317"
+            # No headers needed - collector handles Grafana Cloud auth
             - name: OTEL_TRACE_SAMPLING_RATIO
               value: "0.1"
             - name: OTEL_LOG_SAMPLING_RATIO
