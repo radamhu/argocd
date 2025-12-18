@@ -24,7 +24,67 @@ spec:
           imagePullPolicy: Always
           command:
             - "python"
-            - "scripts/seed_users.py"
+            - "-c"
+            - |
+              import bcrypt
+              import sqlite3
+              from pathlib import Path
+
+              def hash_password(password: str) -> str:
+                  return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+              db_path = "/app/data/dentari.db"
+              print(f"🌱 Seeding users to {db_path}...")
+
+              conn = sqlite3.connect(db_path)
+              cursor = conn.cursor()
+
+              # Check if tables exist
+              cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('users', 'user_sessions')")
+              existing_tables = {row[0] for row in cursor.fetchall()}
+
+              if 'users' not in existing_tables:
+                  print("📋 Creating users table...")
+                  schema_path = Path("/app/data/schema/users.sql")
+                  if not schema_path.exists():
+                      print(f"❌ Schema file not found: {schema_path}")
+                      conn.close()
+                      exit(1)
+                  with open(schema_path, "r") as f:
+                      cursor.executescript(f.read())
+                  print("✅ Schema created")
+
+              users = [
+                  {"username": "owner", "email": "owner@example.local", "password": "owner123", "name": "Owner", "role": "owner", "courier_name": None},
+                  {"username": "courier1", "email": "courier1@example.local", "password": "courier123", "name": "Courier 1", "role": "courier", "courier_name": "Courier 1"},
+              ]
+
+              for user in users:
+                  cursor.execute("SELECT username FROM users WHERE username = ?", (user["username"],))
+                  if cursor.fetchone():
+                      print(f"⏭️  User '{user['username']}' already exists, skipping")
+                      continue
+
+                  password_hash = hash_password(user["password"])
+                  cursor.execute(
+                      "INSERT INTO users (username, email, password_hash, name, role, courier_name, is_active) VALUES (?, ?, ?, ?, ?, ?, TRUE)",
+                      (user["username"], user["email"], password_hash, user["name"], user["role"], user["courier_name"])
+                  )
+                  print(f"✅ Created user: {user['username']} ({user['role']})")
+
+              conn.commit()
+
+              print("\n📋 Current users:")
+              cursor.execute("SELECT username, email, name, role FROM users")
+              for row in cursor.fetchall():
+                  print(f"✅ {row[0]:12} | {row[2]:15} | {row[3]:12} | {row[1]}")
+
+              conn.close()
+              print("\n✅ Seeding complete!")
+              print("🔒 Default credentials:")
+              print("   Owner:   username=owner    password=owner123")
+              print("   Courier: username=courier1 password=courier123")
+              print("⚠️  Change these passwords in production!")
           env:
             - name: PYTHONUNBUFFERED
               value: "1"
