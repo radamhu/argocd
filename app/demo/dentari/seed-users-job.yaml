@@ -1,0 +1,50 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dentari-seed-users
+  namespace: dentari
+  labels:
+    app: dentari
+    component: seed-job
+spec:
+  # Keep the pod for 1 hour after completion for log inspection
+  ttlSecondsAfterFinished: 3600
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: dentari
+        component: seed-job
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: seed-users
+          image: ghcr.io/radamhu/dentari:latest
+          imagePullPolicy: Always
+          command:
+            - "python"
+            - "scripts/seed_users.py"
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+      imagePullSecrets:
+        - name: ghcr-secret
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dentari-data-pvc
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
