@@ -8,10 +8,10 @@ metadata:
 spec:
   destination:
     namespace: dentari
-    server: 'https://kubernetes.default.svc'
+    server: "https://kubernetes.default.svc"
   source:
     path: app/demo/dentari
-    repoURL: 'https://github.com/radamhu/argocd'
+    repoURL: "https://github.com/radamhu/argocd"
     targetRevision: main
   sources: []
   project: default
@@ -26,7 +26,7 @@ spec:
       - PrunePropagationPolicy=foreground
       - PruneLast=true
       - ApplyOutOfSyncOnly=false
-      - Replace=true
+      - ServerSideApply=true
       - Prune=true
     retry:
       limit: 10
