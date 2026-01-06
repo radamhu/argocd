@@ -156,6 +156,164 @@ curl http://localhost:8888/metrics
 kubectl exec -it deployment/dentari -- wget -O- http://otel-collector:4317
 ```
 
+## Database Migrations
+
+The Dentari application uses an automated database migration system to ensure the database schema is always up-to-date.
+
+### How It Works
+
+**Init Container Pattern:**
+- Every pod starts with an `init-migrations` container
+- Runs `scripts/run_migrations.py` before the main app starts
+- Executes all pending migrations from `scripts/migrations/` directory
+- Fails fast if migrations error (prevents app from starting with broken schema)
+
+**Migration Tracking:**
+- Applied migrations are recorded in `schema_migrations` table
+- Contains: `id`, `filename`, `applied_at` timestamp
+- Prevents duplicate migration execution
+- Provides audit trail of schema changes
+
+**Deployment Flow:**
+```
+PVC Created → seed-users-job → Init Container (Migrations) → Main App
+                 ↓                      ↓                        ↓
+              User Data          Schema Creation          Application Ready
+```
+
+### Adding New Migrations
+
+1. **Create migration file** in `scripts/migrations/`:
+   ```bash
+   # Naming convention: NNN_description.py
+   002_add_new_feature.py
+   ```
+
+2. **Implement migration function**:
+   ```python
+   def run_migration(db_path: str = "data/dentari.db") -> None:
+       """Migration description"""
+       conn = sqlite3.connect(db_path)
+       cursor = conn.cursor()
+
+       # Your migration logic here
+       cursor.execute("ALTER TABLE ...")
+
+       conn.commit()
+       conn.close()
+   ```
+
+3. **Test locally**:
+   ```bash
+   cd /path/to/Dentari
+   python scripts/run_migrations.py
+   ```
+
+4. **Commit and deploy**:
+   ```bash
+   git add scripts/migrations/002_add_new_feature.py
+   git commit -m "feat: add new feature migration"
+   git push
+   # Migration auto-applies on next pod start
+   ```
+
+### Migration Troubleshooting
+
+#### Init Container Failed
+
+```bash
+# Check init container logs
+kubectl logs -n dentari <pod-name> -c init-migrations
+
+# Common issues:
+# - SQL syntax error in migration file
+# - Missing schema file referenced by migration
+# - Database file permissions
+```
+
+#### Verify Applied Migrations
+
+```bash
+# Connect to database in running pod
+kubectl exec -it -n dentari deployment/dentari -- sqlite3 /app/data/dentari.db
+
+# Query migration history
+sqlite> SELECT * FROM schema_migrations ORDER BY applied_at;
+
+# Check table structure
+sqlite> .schema dental_work_log
+sqlite> .quit
+```
+
+#### Manual Migration Execution
+
+If you need to run migrations manually:
+
+```bash
+# Copy migration runner to pod
+kubectl exec -it -n dentari deployment/dentari -- python scripts/run_migrations.py
+
+# Or run specific migration
+kubectl exec -it -n dentari deployment/dentari -- \
+  python scripts/migrations/001_create_dental_work_log.py
+```
+
+#### Rolling Back Migrations
+
+**Warning:** Migrations are forward-only. No automatic rollback.
+
+To rollback manually:
+1. Write reverse SQL statements
+2. Execute via `kubectl exec`
+3. Remove migration record from `schema_migrations` table
+
+Example:
+```bash
+kubectl exec -it -n dentari deployment/dentari -- sqlite3 /app/data/dentari.db <<EOF
+-- Reverse the migration
+DROP TABLE IF EXISTS dental_work_log;
+
+-- Remove from tracking
+DELETE FROM schema_migrations WHERE filename = '001_create_dental_work_log.py';
+EOF
+```
+
+#### Database Recovery
+
+If database is corrupted or lost:
+
+1. **Delete PVC** (destroys all data):
+   ```bash
+   kubectl delete pvc dentari-data-pvc -n dentari
+   ```
+
+2. **Recreate PVC**:
+   ```bash
+   kubectl apply -f pvc.yaml
+   ```
+
+3. **Restart pod** (init container recreates schema):
+   ```bash
+   kubectl delete pod -l app=dentari -n dentari
+   ```
+
+4. **Re-run seed job** (restores initial users):
+   ```bash
+   kubectl delete job dentari-seed-users -n dentari
+   kubectl apply -f seed-users-job.yaml
+   ```
+
+### Migration Best Practices
+
+- ✅ Use `CREATE TABLE IF NOT EXISTS` for safety
+- ✅ Test migrations with production data dumps locally
+- ✅ Keep migrations small and focused
+- ✅ Use transactions for multi-step changes
+- ✅ Add indexes after bulk inserts, not before
+- ❌ Don't modify existing migrations (create new ones)
+- ❌ Don't delete migration files (breaks tracking)
+- ❌ Don't use `DROP TABLE` without backups
+
 ### Access Application
 
 ```bash

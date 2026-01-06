@@ -20,6 +20,26 @@ spec:
       labels:
         app: dentari
     spec:
+      initContainers:
+        - name: init-migrations
+          image: ghcr.io/radamhu/dentari:main-54bba75
+          imagePullPolicy: Always
+          command:
+            - python
+            - scripts/run_migrations.py
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
       containers:
         - name: dentari
           image: ghcr.io/radamhu/dentari:main-54bba75
