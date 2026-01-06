@@ -22,7 +22,7 @@ spec:
     spec:
       initContainers:
         - name: init-migrations
-          image: ghcr.io/radamhu/dentari:main-49b0357
+          image: ghcr.io/radamhu/dentari:main-6d7ece8
           imagePullPolicy: Always
           command:
             - python
@@ -45,7 +45,7 @@ spec:
             runAsGroup: 1000
       containers:
         - name: dentari
-          image: ghcr.io/radamhu/dentari:main-49b0357
+          image: ghcr.io/radamhu/dentari:main-6d7ece8
           imagePullPolicy: Always
           resources:
             requests:
