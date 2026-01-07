@@ -156,126 +156,104 @@ curl http://localhost:8888/metrics
 kubectl exec -it deployment/dentari -- wget -O- http://otel-collector:4317
 ```
 
-## Database Migrations
+## Database Initialization
 
-The Dentari application uses an automated database migration system to ensure the database schema is always up-to-date.
+The Dentari application uses a Kubernetes Job for database schema creation and initial data seeding.
 
 ### How It Works
 
-**Init Container Pattern:**
-- Every pod starts with an `init-migrations` container
-- Runs `scripts/run_migrations.py` before the main app starts
-- Executes all pending migrations from `scripts/migrations/` directory
-- Fails fast if migrations error (prevents app from starting with broken schema)
+**Kubernetes Job Pattern:**
+- Separate Job (`seed-schema-job.yaml`) runs independently before app deployment
+- Creates all database tables with inline SQL (users, user_sessions, dental_work_log)
+- Seeds initial users (owner, courier1) with bcrypt password hashing
+- Idempotent: safe to re-run, uses `CREATE TABLE IF NOT EXISTS`
+- Non-blocking: app pods start immediately without waiting for init container
 
-**Migration Tracking:**
-- Applied migrations are recorded in `schema_migrations` table
-- Contains: `id`, `filename`, `applied_at` timestamp
-- Prevents duplicate migration execution
-- Provides audit trail of schema changes
+**Schema Creation:**
+- All SQL inline in Job YAML manifest
+- No external schema files needed
+- No migration tracking table required
+- Simple, reliable, easy to debug
 
 **Deployment Flow:**
 ```
-PVC Created → seed-users-job → Init Container (Migrations) → Main App
-                 ↓                      ↓                        ↓
-              User Data          Schema Creation          Application Ready
+PVC Created → seed-schema-job → Main App
+     ↓              ↓                ↓
+  Storage      Schema + Users   Application Ready
 ```
 
-### Adding New Migrations
+### Initial Deployment
 
-1. **Create migration file** in `scripts/migrations/`:
+1. **Create PVC**:
    ```bash
-   # Naming convention: NNN_description.py
-   002_add_new_feature.py
+   kubectl apply -f pvc.yaml
    ```
 
-2. **Implement migration function**:
-   ```python
-   def run_migration(db_path: str = "data/dentari.db") -> None:
-       """Migration description"""
-       conn = sqlite3.connect(db_path)
-       cursor = conn.cursor()
-
-       # Your migration logic here
-       cursor.execute("ALTER TABLE ...")
-
-       conn.commit()
-       conn.close()
-   ```
-
-3. **Test locally**:
+2. **Run schema initialization Job**:
    ```bash
-   cd /path/to/Dentari
-   python scripts/run_migrations.py
+   kubectl apply -f seed-schema-job.yaml
+
+   # Wait for completion
+   kubectl wait --for=condition=complete job/dentari-seed-schema -n dentari --timeout=60s
+
+   # Check logs
+   kubectl logs -n dentari job/dentari-seed-schema
    ```
 
-4. **Commit and deploy**:
+3. **Deploy application**:
    ```bash
-   git add scripts/migrations/002_add_new_feature.py
-   git commit -m "feat: add new feature migration"
-   git push
-   # Migration auto-applies on next pod start
+   kubectl apply -f deployment.yaml
+   kubectl apply -f service.yaml
+   kubectl apply -f ingress.yaml
    ```
 
-### Migration Troubleshooting
+### Database Troubleshooting
 
-#### Init Container Failed
+#### Check Job Status
 
 ```bash
-# Check init container logs
-kubectl logs -n dentari <pod-name> -c init-migrations
+# Check if job completed successfully
+kubectl get jobs -n dentari
 
-# Common issues:
-# - SQL syntax error in migration file
-# - Missing schema file referenced by migration
-# - Database file permissions
+# View job logs
+kubectl logs -n dentari job/dentari-seed-schema
+
+# Expected output:
+# 🌱 Initializing database schema at /app/data/dentari.db...
+# 📋 Creating database schema...
+# ✅ Schema created successfully!
+# 👤 Seeding initial users...
+# ✅ Database initialization complete!
 ```
 
-#### Verify Applied Migrations
+#### Verify Database Tables
 
 ```bash
 # Connect to database in running pod
 kubectl exec -it -n dentari deployment/dentari -- sqlite3 /app/data/dentari.db
 
-# Query migration history
-sqlite> SELECT * FROM schema_migrations ORDER BY applied_at;
+# List tables
+sqlite> .tables
+# Expected: dental_work_log  user_sessions  users
 
 # Check table structure
+sqlite> .schema users
 sqlite> .schema dental_work_log
 sqlite> .quit
 ```
 
-#### Manual Migration Execution
+#### Re-run Schema Job
 
-If you need to run migrations manually:
+If database needs to be reinitialized:
 
 ```bash
-# Copy migration runner to pod
-kubectl exec -it -n dentari deployment/dentari -- python scripts/run_migrations.py
+# Delete existing job
+kubectl delete job dentari-seed-schema -n dentari
 
-# Or run specific migration
-kubectl exec -it -n dentari deployment/dentari -- \
-  python scripts/migrations/001_create_dental_work_log.py
-```
+# Re-run job
+kubectl apply -f seed-schema-job.yaml
 
-#### Rolling Back Migrations
-
-**Warning:** Migrations are forward-only. No automatic rollback.
-
-To rollback manually:
-1. Write reverse SQL statements
-2. Execute via `kubectl exec`
-3. Remove migration record from `schema_migrations` table
-
-Example:
-```bash
-kubectl exec -it -n dentari deployment/dentari -- sqlite3 /app/data/dentari.db <<EOF
--- Reverse the migration
-DROP TABLE IF EXISTS dental_work_log;
-
--- Remove from tracking
-DELETE FROM schema_migrations WHERE filename = '001_create_dental_work_log.py';
-EOF
+# Job is idempotent - skips existing tables/users
 ```
 
 #### Database Recovery
@@ -292,27 +270,26 @@ If database is corrupted or lost:
    kubectl apply -f pvc.yaml
    ```
 
-3. **Restart pod** (init container recreates schema):
+3. **Re-run schema Job**:
    ```bash
-   kubectl delete pod -l app=dentari -n dentari
+   kubectl delete job dentari-seed-schema -n dentari
+   kubectl apply -f seed-schema-job.yaml
    ```
 
-4. **Re-run seed job** (restores initial users):
+4. **Restart app pod**:
    ```bash
-   kubectl delete job dentari-seed-users -n dentari
-   kubectl apply -f seed-users-job.yaml
+   kubectl rollout restart deployment/dentari -n dentari
    ```
 
-### Migration Best Practices
+### Schema Changes
 
-- ✅ Use `CREATE TABLE IF NOT EXISTS` for safety
-- ✅ Test migrations with production data dumps locally
-- ✅ Keep migrations small and focused
-- ✅ Use transactions for multi-step changes
-- ✅ Add indexes after bulk inserts, not before
-- ❌ Don't modify existing migrations (create new ones)
-- ❌ Don't delete migration files (breaks tracking)
-- ❌ Don't use `DROP TABLE` without backups
+To modify database schema:
+
+1. **Update** `seed-schema-job.yaml` with new table definitions
+2. **For existing deployments**: Run ALTER statements manually via kubectl exec
+3. **For new deployments**: Job automatically creates updated schema
+
+**Note:** This architecture is designed for simplicity. For production with frequent schema changes, consider a migration tool.
 
 ### Access Application
 
