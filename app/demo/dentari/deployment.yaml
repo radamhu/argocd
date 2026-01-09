@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: dentari
-          image: ghcr.io/radamhu/dentari:main-603f406
+          image: ghcr.io/radamhu/dentari:main-5a9739c
           imagePullPolicy: Always
           resources:
             requests:
