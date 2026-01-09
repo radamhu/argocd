@@ -64,6 +64,7 @@ ENV/
 .env
 env.bak/
 venv.bak/
+output.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

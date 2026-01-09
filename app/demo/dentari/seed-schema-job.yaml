@@ -102,6 +102,23 @@ spec:
                   )
               """)
 
+              # Couriers table (Phase 1: Admin Functions)
+              print("  ➤ Creating couriers table...")
+              cursor.execute("""
+                  CREATE TABLE IF NOT EXISTS couriers (
+                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                      name TEXT NOT NULL,
+                      email TEXT NOT NULL UNIQUE,
+                      phone TEXT NOT NULL,
+                      vehicle_type TEXT NOT NULL CHECK(vehicle_type IN ('motor', 'autó', 'bicikli')),
+                      status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active', 'inactive')),
+                      notes TEXT,
+                      created_at TEXT NOT NULL,
+                      updated_at TEXT NOT NULL,
+                      created_by TEXT
+                  )
+              """)
+
               # Create indexes for performance
               print("  ➤ Creating indexes...")
               cursor.execute("CREATE INDEX IF NOT EXISTS idx_users_username ON users(username)")
@@ -114,6 +131,8 @@ spec:
               cursor.execute("CREATE INDEX IF NOT EXISTS idx_dental_work_client ON dental_work_log(client_name)")
               cursor.execute("CREATE INDEX IF NOT EXISTS idx_dental_work_type ON dental_work_log(work_type)")
               cursor.execute("CREATE INDEX IF NOT EXISTS idx_dental_work_created_by ON dental_work_log(created_by)")
+              cursor.execute("CREATE INDEX IF NOT EXISTS idx_couriers_email ON couriers(email)")
+              cursor.execute("CREATE INDEX IF NOT EXISTS idx_couriers_status ON couriers(status)")
 
               conn.commit()
               print("✅ Schema created successfully!")
