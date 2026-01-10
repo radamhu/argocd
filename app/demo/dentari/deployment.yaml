@@ -21,18 +21,6 @@ spec:
         app: dentari
     spec:
       initContainers:
-        - name: init-migrations
-          image: ghcr.io/radamhu/dentari:main-47d6fce
-          imagePullPolicy: Always
-          command:
-            - python
-            - scripts/run_migrations.py
-          env:
-            - name: PYTHONUNBUFFERED
-              value: "1"
-          volumeMounts:
-            - name: data
-              mountPath: /app/data
         - name: restore-dentari-db
           image: litestream/litestream:0.3.13
           args: ["restore", "-if-db-not-exists", "/app/data/dentari.db"]
@@ -59,8 +47,20 @@ spec:
           env: *litestream-env
           volumeMounts: *litestream-mounts
       containers:
+        - name: litestream
+          image: litestream/litestream:0.3.13
+          args: ["replicate"]
+          env: *litestream-env
+          volumeMounts: *litestream-mounts
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
         - name: dentari
-          image: ghcr.io/radamhu/dentari:main-c68248b
+          image: ghcr.io/radamhu/dentari:main-47d6fce
           imagePullPolicy: Always
           resources:
             requests:
@@ -167,6 +167,9 @@ spec:
         - name: logs
           persistentVolumeClaim:
             claimName: dentari-logs-pvc
+        - name: litestream-config
+          configMap:
+            name: litestream-config
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
