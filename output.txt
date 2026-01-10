@@ -1,2 +1,5 @@
-M  .gitignore
-M  app/demo/dentari/seed-schema-job.yaml
+NAME                              READY   STATUS      RESTARTS   AGE
+dentari-589f985bd7-nxbbb          1/1     Running     0          7m30s
+dentari-seed-schema-dnrl9         0/1     Completed   0          104s
+otel-collector-84db8745b9-tpjv6   1/1     Running     0          22d
+test-migration-debug              1/1     Running     0          3d3h

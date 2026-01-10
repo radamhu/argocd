@@ -20,9 +20,47 @@ spec:
       labels:
         app: dentari
     spec:
+      initContainers:
+        - name: init-migrations
+          image: ghcr.io/radamhu/dentari:main-54bba75
+          imagePullPolicy: Always
+          command:
+            - python
+            - scripts/run_migrations.py
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+        - name: restore-dentari-db
+          image: litestream/litestream:0.3.13
+          args: ["restore", "-if-db-not-exists", "/app/data/dentari.db"]
+          env: &litestream-env
+            - name: LITESTREAM_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: litestream-secrets
+                  key: access-key-id
+            - name: LITESTREAM_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: litestream-secrets
+                  key: secret-access-key
+          volumeMounts: &litestream-mounts
+            - name: data
+              mountPath: /app/data
+            - name: litestream-config
+              mountPath: /etc/litestream.yml
+              subPath: litestream.yml
+        - name: restore-risk-db
+          image: litestream/litestream:0.3.13
+          args: ["restore", "-if-db-not-exists", "/app/data/dentari_risk.db"]
+          env: *litestream-env
+          volumeMounts: *litestream-mounts
       containers:
         - name: dentari
-          image: ghcr.io/radamhu/dentari:main-c68248b
+          image: ghcr.io/radamhu/dentari:main-54bba75
           imagePullPolicy: Always
           resources:
             requests:

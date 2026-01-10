@@ -26,12 +26,14 @@ This directory contains Kubernetes manifests for the Dentari application deploym
 ## Components
 
 ### Application Resources
+
 - **deployment.yaml** - Dentari application deployment
 - **service.yaml** - LoadBalancer service (MetalLB)
 - **pvc.yaml** - Persistent volume claims (data, cache, logs)
 - **ingress.yaml** - Ingress configuration (Traefik)
 
 ### OpenTelemetry Resources
+
 - **otel-collector-deployment.yaml** - OTEL Collector deployment
 - **otel-collector-service.yaml** - OTEL Collector service (ClusterIP)
 - **otel-collector-configmap.yaml** - OTEL Collector configuration
@@ -39,6 +41,7 @@ This directory contains Kubernetes manifests for the Dentari application deploym
 - **otel-collector-sealed-secret.yaml** - Sealed secret (to be created)
 
 ### Sealed Secrets
+
 - **ghcr-sealed-secret.yaml** - GitHub Container Registry credentials (to be created)
 - **secret.yaml** - Legacy OTEL configuration template (deprecated)
 
@@ -163,6 +166,7 @@ The Dentari application uses a Kubernetes Job for database schema creation and i
 ### How It Works
 
 **Kubernetes Job Pattern:**
+
 - Separate Job (`seed-schema-job.yaml`) runs independently before app deployment
 - Creates all database tables with inline SQL (users, user_sessions, dental_work_log)
 - Seeds initial users (owner, courier1) with bcrypt password hashing
@@ -170,12 +174,14 @@ The Dentari application uses a Kubernetes Job for database schema creation and i
 - Non-blocking: app pods start immediately without waiting for init container
 
 **Schema Creation:**
+
 - All SQL inline in Job YAML manifest
 - No external schema files needed
 - No migration tracking table required
 - Simple, reliable, easy to debug
 
 **Deployment Flow:**
+
 ```
 PVC Created → seed-schema-job → Main App
      ↓              ↓                ↓
@@ -185,11 +191,13 @@ PVC Created → seed-schema-job → Main App
 ### Initial Deployment
 
 1. **Create PVC**:
+
    ```bash
    kubectl apply -f pvc.yaml
    ```
 
 2. **Run schema initialization Job**:
+
    ```bash
    kubectl apply -f seed-schema-job.yaml
 
@@ -256,25 +264,43 @@ kubectl apply -f seed-schema-job.yaml
 # Job is idempotent - skips existing tables/users
 ```
 
-#### Database Recovery
+#### Resetting Database (Manual Reset)
 
-If database is corrupted or lost:
+If the database becomes corrupted or you want to start with a fresh instance:
 
-1. **Delete PVC** (destroys all data):
-   ```bash
-   kubectl delete pvc dentari-data-pvc -n dentari
-   ```
+1.  **Delete the PVC**:
+    ```bash
+    kubectl delete pvc dentari-data-pvc -n dentari
+    ```
+2.  **Redeploy the application**: ArgoCD will recreate the PVC and the `init-migrations` container will initialize the schema.
+3.  **Run the Seed Job** (Optional): To populate the database with test data:
+    ```bash
+    kubectl apply -f seed-schema-job.yaml -n dentari
+    ```
 
-2. **Recreate PVC**:
-   ```bash
-   kubectl apply -f pvc.yaml
-   ```
+---
 
-3. **Re-run schema Job**:
-   ```bash
-   kubectl delete job dentari-seed-schema -n dentari
-   kubectl apply -f seed-schema-job.yaml
-   ```
+### Backup & Disaster Recovery (Litestream)
+
+The application implements continuous real-time backup using **Litestream**.
+
+#### How it works:
+
+1.  **Sidecar Replication**: A `litestream` sidecar container runs alongside the main application, continuously replicating changes from the SQLite databases to S3-compatible storage.
+2.  **Automated Restore**: On startup, `initContainers` (`restore-dentari-db` and `restore-risk-db`) check if the database files exist in `/app/data`. If they are missing, it automatically downloads the latest version from S3.
+
+#### Databases Covered:
+
+- `dentari.db`: Core application data (Users, Clinics, Pricing, Costs).
+- `dentari_risk.db`: Risk Matrix data, delivery jobs, and alert logs.
+
+#### Configuration:
+
+- Configuration is stored in a ConfigMap: `litestream-config`.
+- S3 credentials are stored in a Secret: `litestream-secrets`.
+
+> [!NOTE]
+> This strategy ensures that data is persisted even if the Persistent Volume is lost, providing a much higher level of durability than standard volume persistence.
 
 4. **Restart app pod**:
    ```bash
@@ -330,10 +356,12 @@ env:
 ```
 
 Requires:
-- OTEL collector deployed (otel-collector-*.yaml)
+
+- OTEL collector deployed (otel-collector-\*.yaml)
 - Grafana Cloud credentials in otel-collector-secret
 
 Benefits:
+
 - Centralized telemetry processing
 - Batching and retry logic
 - Multiple apps can share one collector
@@ -357,10 +385,12 @@ env:
 ```
 
 Requires:
+
 - Grafana Cloud credentials in application secret
 - No OTEL collector needed
 
 Drawbacks:
+
 - Each pod connects directly (more connections)
 - No batching/retry in collector
 - Credentials duplicated per app
@@ -486,14 +516,17 @@ Rotate the GHCR token every 90 days:
 ## Files Reference
 
 - **deployment.yaml** - Main application deployment
+
   - Uses `imagePullSecrets: ghcr-secret` for pulling images
   - References `dentari-otel-secret` for OpenTelemetry config
 
 - **ghcr-sealed-secret.yaml** - Sealed secret for GHCR access (to be created)
+
   - Type: `kubernetes.io/dockerconfigjson`
   - Encrypted with sealed-secrets controller public key
 
 - **ghcr-secret.yaml** - Template file (can be removed after sealed secret is created)
+
   - Contains documentation only
   - Should NOT contain actual credentials
 

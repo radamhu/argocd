@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litestream-config
+  namespace: dentari
+data:
+  litestream.yml: |
+    dbs:
+      - path: /app/data/dentari.db
+        replicas:
+          - url: s3://dentari-prod/dentari.db
+            endpoint: https://0490a7059fc91b8838059da54b63b89c.r2.cloudflarestorage.com
+      - path: /app/data/dentari_risk.db
+        replicas:
+          - url: s3://dentari-prod/dentari_risk.db
+            endpoint: https://0490a7059fc91b8838059da54b63b89c.r2.cloudflarestorage.com
