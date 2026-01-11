@@ -60,7 +60,7 @@ spec:
               memory: "256Mi"
               cpu: "200m"
         - name: dentari
-          image: ghcr.io/radamhu/dentari:main-9cebee6
+          image: ghcr.io/radamhu/dentari:main-da04247
           imagePullPolicy: Always
           resources:
             requests:
