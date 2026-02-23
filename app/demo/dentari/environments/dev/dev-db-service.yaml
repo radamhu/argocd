@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dev-db
+  namespace: dev-dentari
+  labels:
+    app: dev-db
+spec:
+  selector:
+    app: dev-db
+  type: ClusterIP
+  ports:
+    - name: postgres
+      protocol: TCP
+      port: 5432
+      targetPort: 5432

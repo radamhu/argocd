@@ -1,0 +1,57 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-db
+  namespace: dev-dentari
+  labels:
+    app: dev-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dev-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dev-db
+    spec:
+      containers:
+        - name: db
+          image: postgres:16-alpine
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              value: "dentari"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dev-dentari-secrets
+                  key: db-password
+            - name: POSTGRES_DB
+              value: "dentari"
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
+          healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U dentari"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: dev-dentari-db-pvc

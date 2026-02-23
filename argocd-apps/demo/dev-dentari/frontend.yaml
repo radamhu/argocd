@@ -1,20 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dentari
+  name: dev-dentari-frontend
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io/foreground
 spec:
-  destination:
-    namespace: dentari
-    server: "https://kubernetes.default.svc"
-  source:
-    path: app/demo/dentari
-    repoURL: "https://github.com/radamhu/argocd"
-    targetRevision: main
-  sources: []
   project: default
+  source:
+    repoURL: https://github.com/radamhu/argocd
+    targetRevision: main
+    path: app/demo/dentari/environments/dev
+    directory:
+      include: "dev-frontend-*.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev-dentari
   syncPolicy:
     automated:
       prune: true

@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-dentari-infra
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/radamhu/argocd
+    targetRevision: main
+    path: app/demo/dentari/environments/dev
+    directory:
+      exclude: "{dev-backend-*,dev-frontend-*}"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev-dentari
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=false
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=false
+      - ServerSideApply=true
+      - Prune=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 20s
+        factor: 2
+        maxDuration: 15m

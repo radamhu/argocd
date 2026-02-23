@@ -2,65 +2,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dentari
-  namespace: dentari
+  name: dev-frontend
+  namespace: dev-dentari
   labels:
-    app: dentari
+    app: dev-frontend
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dentari
+      app: dev-frontend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: dentari
+        app: dev-frontend
     spec:
-      initContainers:
-        - name: restore-dentari-db
-          image: litestream/litestream:0.3.13
-          args: ["restore", "-if-db-not-exists", "/app/data/dentari.db"]
-          env: &litestream-env
-            - name: LITESTREAM_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: litestream-secrets
-                  key: access-key-id
-            - name: LITESTREAM_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: litestream-secrets
-                  key: secret-access-key
-          volumeMounts: &litestream-mounts
-            - name: data
-              mountPath: /app/data
-            - name: litestream-config
-              mountPath: /etc/litestream.yml
-              subPath: litestream.yml
-        - name: restore-risk-db
-          image: litestream/litestream:0.3.13
-          args: ["restore", "-if-db-not-exists", "/app/data/dentari_risk.db"]
-          env: *litestream-env
-          volumeMounts: *litestream-mounts
       containers:
-        - name: litestream
-          image: litestream/litestream:0.3.13
-          args: ["replicate"]
-          env: *litestream-env
-          volumeMounts: *litestream-mounts
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "50m"
-            limits:
-              memory: "256Mi"
-              cpu: "200m"
-        - name: dentari
-          image: ghcr.io/radamhu/dentari:main-da04247
+        - name: frontend
+          image: ghcr.io/radamhu/dentari:dev
           imagePullPolicy: Always
           resources:
             requests:
@@ -74,17 +36,14 @@ spec:
               protocol: TCP
               name: http
           env:
-            # Python configuration
             - name: PYTHONUNBUFFERED
               value: "1"
             - name: PYTHONDONTWRITEBYTECODE
               value: "1"
-            # Memory optimization
             - name: MALLOC_ARENA_MAX
-              value: "4"
+              value: "2"
             - name: PYTHONHASHSEED
               value: "0"
-            # Streamlit configuration
             - name: STREAMLIT_SERVER_PORT
               value: "8501"
             - name: STREAMLIT_SERVER_ADDRESS
@@ -105,11 +64,10 @@ spec:
               value: "false"
             - name: STREAMLIT_SERVER_FILE_WATCHER_TYPE
               value: "auto"
-            # Application configuration
             - name: TZ
               value: "Europe/Budapest"
             - name: LOG_LEVEL
-              value: "INFO"
+              value: "debug"
             - name: LOG_DIR
               value: "/app/logs"
             - name: DATA_PATH
@@ -117,21 +75,19 @@ spec:
             - name: CACHE_PATH
               value: "/app/cache"
             - name: DEPLOYMENT_ENV
-              value: "kubernetes"
+              value: "development"
             - name: DEPLOYMENT_TIER
               value: "standard"
-            # OpenTelemetry configuration (DISABLED)
+            - name: API_URL
+              value: "http://dev-backend:8000"
+            - name: DATABASE_URL
+              value: "postgresql://dentari:${DB_PASSWORD}@dev-db:5432/dentari"
             - name: RUNNING_IN_DOCKER
               value: "true"
             - name: OTEL_ENABLED
               value: "false"
-            # OTEL disabled - using file and console logging only
-            - name: OTEL_TRACE_SAMPLING_RATIO
-              value: "0.1"
-            - name: OTEL_LOG_SAMPLING_RATIO
-              value: "1.0"
             - name: OTEL_SERVICE_NAME
-              value: "dentari"
+              value: "dentari-frontend"
           volumeMounts:
             - name: data
               mountPath: /app/data
@@ -160,16 +116,13 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: dentari-data-pvc
+            claimName: dev-dentari-data-pvc
         - name: cache
           persistentVolumeClaim:
-            claimName: dentari-cache-pvc
+            claimName: dev-dentari-cache-pvc
         - name: logs
           persistentVolumeClaim:
-            claimName: dentari-logs-pvc
-        - name: litestream-config
-          configMap:
-            name: litestream-config
+            claimName: dev-dentari-logs-pvc
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
