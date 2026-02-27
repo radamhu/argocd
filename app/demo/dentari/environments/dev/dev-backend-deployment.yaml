@@ -42,8 +42,13 @@ spec:
               value: "0.0.0.0"
             - name: API_PORT
               value: "8000"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dev-dentari-secrets
+                  key: db-password
             - name: DATABASE_URL
-              value: "postgresql://dentari:${DB_PASSWORD}@dev-db:5432/dentari"
+              value: "postgresql://dentari:$(DB_PASSWORD)@dev-db:5432/dentari"
             - name: DB_ECHO
               value: "false"
             - name: DEPLOYMENT_ENV

@@ -80,8 +80,13 @@ spec:
               value: "standard"
             - name: API_URL
               value: "http://dev-backend:8000"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dev-dentari-secrets
+                  key: db-password
             - name: DATABASE_URL
-              value: "postgresql://dentari:${DB_PASSWORD}@dev-db:5432/dentari"
+              value: "postgresql://dentari:$(DB_PASSWORD)@dev-db:5432/dentari"
             - name: RUNNING_IN_DOCKER
               value: "true"
             - name: OTEL_ENABLED
