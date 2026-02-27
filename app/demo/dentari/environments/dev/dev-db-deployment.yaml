@@ -46,11 +46,18 @@ spec:
           volumeMounts:
             - name: db-data
               mountPath: /var/lib/postgresql/data
-          healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U dentari"]
-            interval: 10s
-            timeout: 5s
-            retries: 5
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "dentari"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "dentari"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
       volumes:
         - name: db-data
           persistentVolumeClaim:

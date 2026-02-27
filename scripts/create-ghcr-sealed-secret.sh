@@ -62,13 +62,13 @@ echo ""
 # Create the sealed secret
 echo "Creating sealed secret..."
 
-OUTPUT_FILE="app/demo/dentari/ghcr-sealed-secret.yaml"
+OUTPUT_FILE="app/demo/dentari/environments/dev/dev-ghcr-sealed-secret.yaml"
 
 kubectl create secret docker-registry ghcr-secret \
   --docker-server=ghcr.io \
   --docker-username="$GITHUB_USERNAME" \
   --docker-password="$GITHUB_TOKEN" \
-  --namespace=dentari \
+  --namespace=dev-dentari \
   --dry-run=client -o yaml | \
   kubeseal --controller-name=sealed-secrets-controller --controller-namespace=kube-system \
   --format=yaml > "$OUTPUT_FILE"

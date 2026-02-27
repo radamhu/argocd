@@ -12,7 +12,7 @@ spec:
     targetRevision: main
     path: app/demo/dentari/environments/dev
     directory:
-      exclude: "{dev-backend-*,dev-frontend-*}"
+      exclude: "dev-[bf]*"
   destination:
     server: https://kubernetes.default.svc
     namespace: dev-dentari
