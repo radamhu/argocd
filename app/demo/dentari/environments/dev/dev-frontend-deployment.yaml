@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/radamhu/dentari-frontend:dev
+          image: ghcr.io/radamhu/dentari-frontend:main-e51ae71
           imagePullPolicy: Always
           resources:
             requests:
