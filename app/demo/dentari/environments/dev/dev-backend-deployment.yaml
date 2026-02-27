@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/radamhu/dentari-backend:dev-54317a8
+          image: ghcr.io/radamhu/dentari-backend:dev-17f3a6f
           imagePullPolicy: Always
           resources:
             requests:
