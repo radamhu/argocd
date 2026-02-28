@@ -108,6 +108,19 @@ Configurations are aligned with `Dentari/.env.dev`:
 
 ## Verification
 
+### Quick health-check (3 commands)
+
+```bash
+# 1) Seed Job állapot
+kubectl -n dev-dentari get job dev-backend-seed -o custom-columns=NAME:.metadata.name,SUCCEEDED:.status.succeeded,FAILED:.status.failed
+
+# 2) Seed Job log (várt: "Created 3 demo users" vagy "already has ... users")
+kubectl -n dev-dentari logs job/dev-backend-seed --tail=80
+
+# 3) Frontend login hibaellenőrzés (várt: "OK")
+curl -s http://192.168.0.105:8501/ | grep -q "Nincs regisztrált felhasználó" && echo "ERROR: seed/login issue" || echo "OK"
+```
+
 ### Check Pod Status
 
 ```bash

@@ -48,11 +48,11 @@ spec:
               value: "courier2"
             - name: SEED_COURIER2_NAME
               value: "Nagy Péter (Autó)"
-          command: ["/bin/bash", "-lc"]
+          command: ["/bin/bash", "-c"]
           args:
             - |
               set -euo pipefail
-              python <<'PYTHON_SEED'
+              /app/.venv/bin/python <<'PYTHON_SEED'
               import os
               import sys
               import time
