@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: metallb-watchdog
+  namespace: metallb-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: metallb-watchdog
+  namespace: metallb-system
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: metallb-watchdog
+  namespace: metallb-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: metallb-watchdog
+subjects:
+  - kind: ServiceAccount
+    name: metallb-watchdog
+    namespace: metallb-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metallb-watchdog
+  namespace: metallb-system
+  labels:
+    app: metallb-watchdog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metallb-watchdog
+  template:
+    metadata:
+      labels:
+        app: metallb-watchdog
+    spec:
+      serviceAccountName: metallb-watchdog
+      containers:
+        - name: watchdog
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "MetalLB Watchdog starting..."
+              echo "Waiting 60 seconds for Proxmox bridge to stabilize..."
+              sleep 60
+
+              echo "Restarting MetalLB speaker pods to refresh GARP..."
+              kubectl delete pod -n metallb-system -l app.kubernetes.io/component=speaker --ignore-not-found=true
+
+              echo "Waiting for speakers to restart..."
+              sleep 30
+              kubectl wait --for=condition=ready pod -n metallb-system -l app.kubernetes.io/component=speaker --timeout=120s
+
+              echo "MetalLB speakers restarted successfully. Watchdog entering sleep mode."
+              echo "Watchdog will only restart speakers again if this pod restarts or node reboots."
+
+              # Sleep indefinitely to prevent restart loop
+              sleep infinity
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
+      restartPolicy: Always

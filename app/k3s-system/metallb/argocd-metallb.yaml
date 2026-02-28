@@ -16,11 +16,32 @@ spec:
           speaker:
             frr:
               enabled: false
+            # Proxmox-specific optimizations
+            memberlist:
+              enabled: true
+              mlBindPort: 7946
+            # More aggressive ARP announcement for Proxmox bridges
+            env:
+              - name: METALLB_ML_BIND_ADDR
+                value: "0.0.0.0"
+              - name: METALLB_ML_LABELS
+                value: "app.kubernetes.io/component=speaker"
+              # Send GARP more frequently to combat Proxmox ARP filtering
+              - name: METALLB_SPEAKER_LOG_LEVEL
+                value: "info"
+            tolerations:
+              # Ensure speakers run on all nodes including control-plane
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
+                effect: NoSchedule
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+                effect: NoSchedule
     - repoURL: "https://github.com/radamhu/argocd.git"
       targetRevision: main
       path: app/k3s-system/metallb
       directory:
-        include: "{metallb-config.yaml}"
+        include: "{metallb-config.yaml,metallb-watchdog-deployment.yaml}"
   destination:
     server: https://kubernetes.default.svc
     namespace: metallb-system
