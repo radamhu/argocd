@@ -28,7 +28,8 @@ Files are located in `environments/dev/`:
 
 - `dev-namespace.yaml`: Namespace `dev-dentari`.
 - `dev-frontend-deployment.yaml`: Streamlit frontend.
-- `dev-backend-deployment.yaml`: FastAPI backend with data seeding.
+- `dev-backend-deployment.yaml`: FastAPI backend service.
+- `dev-backend-seed-job.yaml`: ArgoCD PostSync Job that seeds demo users into PostgreSQL (idempotent).
 - `dev-db-deployment.yaml`: PostgreSQL database.
 - `dev-pvc.yaml`: Persistent volumes for data, logs, and cache.
 - `dev-ingress.yaml`: Ingress for frontend and API.
@@ -52,6 +53,13 @@ ArgoCD will sync the `main` branch and deploy the following child applications:
 - `dev-dentari-backend`: Manages `dev-backend-*.yaml`
 - `dev-dentari-frontend`: Manages `dev-frontend-*.yaml`
 - `dev-dentari-infra`: Manages all other `dev-*.yaml` supporting manifests.
+
+#### DEV user seeding in Kubernetes
+
+- Backend entrypoint intentionally skips `seed_initial_data()` in Kubernetes (`KUBERNETES_SERVICE_HOST` is set).
+- DEV seeding is handled by `dev-backend-seed-job.yaml` as an ArgoCD `PostSync` hook.
+- The Job is idempotent: if users already exist, it exits successfully without modifications.
+- Hook delete policy (`BeforeHookCreation,HookSucceeded`) ensures a clean re-run on the next sync.
 
 #### Deployment Architecture
 
