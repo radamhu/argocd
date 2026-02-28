@@ -1,4 +1,6 @@
-## Problem Description
+## NOT USED ANYMORE
+
+Problem Description
 
 You are experiencing an issue where the MetalLB load-balanced IPs are unreachable after the Proxmox K3s VM boots. You have to manually run `kubectl delete pod -n metallb-system -l app.kubernetes.io/component=speaker` to restore connectivity.
 
@@ -39,7 +41,6 @@ argocd/app/k3s-system/metallb/metallb-watchdog-deployment.yaml
 4. To fully verify the fix, you can optionally reboot the K3s VM and observe that you no longer need to manually execute the `kubectl delete pod` command; the watchdog will automatically handle the GARP delay for you 60 seconds after the cluster comes up.
 
 **Comment**Ctrl+Alt+M
-
 
 # MetalLB Speaker Boot Fix Verification
 
