@@ -1,7 +1,7 @@
 version: 1.0
 provider:
   name: openfaas
-  gateway: http://192.168.0.101/openfaas
+  gateway: https://openfaas.192.168.0.10.sslip.io
 functions:
   hello-python:
     lang: python3-flask

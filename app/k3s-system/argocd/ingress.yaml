@@ -1,24 +1,24 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: openfaas
-  namespace: openfaas
+  name: argocd-server
+  namespace: argocd
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   ingressClassName: traefik
   rules:
-    - host: openfaas.192.168.0.10.sslip.io
+    - host: argocd.192.168.0.10.sslip.io
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: gateway
+                name: argocd-server
                 port:
-                  number: 8080
+                  number: 80
   tls:
     - hosts:
-        - openfaas.192.168.0.10.sslip.io
-      secretName: openfaas-gateway-tls
+        - argocd.192.168.0.10.sslip.io
+      secretName: argocd-server-tls

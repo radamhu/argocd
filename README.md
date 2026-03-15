@@ -23,7 +23,7 @@ argocd/
 │   │   ├── dentari/             # Dentari app deployment
 │   │   ├── hello-flask/         # Flask demo app
 │   │   ├── helm-guestbook/      # Helm guestbook example
-│   │   └── openfaas-fn/         # OpenFaaS function examples
+│   ├── openfaas-fn/             # OpenFaaS function examples
 │   └── k3s-system/              # System components
 │       ├── cert-manager/
 │       ├── eraser/
@@ -216,10 +216,11 @@ OpenFaaS is deployed via ArgoCD Helm chart with the following configuration:
 
 | Item | Value |
 |------|-------|
-| **UI URL** | `http://192.168.0.101/openfaas/ui/` |
-| **API URL** | `http://192.168.0.101/openfaas/` |
+| **UI URL** | `https://openfaas.192.168.0.10.sslip.io/ui/` |
+| **API URL** | `https://openfaas.192.168.0.10.sslip.io/` |
 | **Username** | `admin` |
 | **Password** | See command below |
+| **TLS** | Self-signed cert via cert-manager |
 
 ```bash
 # Get OpenFaaS password
@@ -234,30 +235,38 @@ The OpenFaaS ArgoCD application is defined in `app/k3s-system/openfaas/argocd-op
 - **Version**: `14.2.131`
 - **Namespace**: `openfaas`
 - **Functions Namespace**: `openfaas-fn`
-- **Service Type**: ClusterIP (exposed via Traefik IngressRoute)
+- **Service Type**: ClusterIP (exposed via Traefik Ingress)
 
-### Traefik IngressRoute
+### Traefik Ingress
 
-OpenFaaS is exposed via path-based routing at `/openfaas`:
+OpenFaaS is exposed via host-based routing on `openfaas.192.168.0.10.sslip.io` with TLS:
 
 ```yaml
 # app/k3s-system/openfaas/ingress.yaml
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: openfaas
   namespace: openfaas
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
-  entryPoints:
-    - web
-  routes:
-    - match: PathPrefix(`/openfaas`)
-      kind: Rule
-      middlewares:
-        - name: openfaas-stripprefix
-      services:
-        - name: gateway
-          port: 8080
+  ingressClassName: traefik
+  rules:
+    - host: openfaas.192.168.0.10.sslip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - openfaas.192.168.0.10.sslip.io
+      secretName: openfaas-gateway-tls
 ```
 
 ---
@@ -271,7 +280,7 @@ spec:
 curl -sSL https://cli.openfaas.com | sudo sh
 
 # Login to OpenFaaS
-echo "<password>" | faas-cli login --gateway http://192.168.0.101/openfaas --username admin --password-stdin
+echo "<password>" | faas-cli login --gateway https://openfaas.192.168.0.10.sslip.io --username admin --password-stdin
 ```
 
 ### Create a New Python Function
@@ -308,7 +317,7 @@ cat > stack.yaml << 'EOF'
 version: 1.0
 provider:
   name: openfaas
-  gateway: http://192.168.0.101/openfaas
+  gateway: https://openfaas.192.168.0.10.sslip.io
 functions:
   hello-python:
     lang: python3-flask
@@ -330,18 +339,19 @@ faas-cli deploy -f stack.yaml
 
 ```bash
 # With data
-curl -u admin:<password> http://192.168.0.101/openfaas/function/hello-python -d "Your Name"
+curl -k -u admin:<password> https://openfaas.192.168.0.10.sslip.io/function/hello-python -d "Your Name"
 
 # Without data
-curl -u admin:<password> http://192.168.0.101/openfaas/function/hello-python
+curl -k -u admin:<password> https://openfaas.192.168.0.10.sslip.io/function/hello-python
 
-# Using faas-cli
-echo "Your Name" | faas-cli invoke hello-python --gateway http://192.168.0.101/openfaas
+# Self-signed TLS note
+# add --tls-no-verify if your faas-cli does not trust the local cert
+echo "Your Name" | faas-cli invoke hello-python --gateway https://openfaas.192.168.0.10.sslip.io
 ```
 
-### Example Function (app/demo/openfaas-fn/)
+### Example Function (app/openfaas-fn/)
 
-The repository includes a sample Python function in `app/demo/openfaas-fn/`:
+The repository includes a sample Python function in `app/openfaas-fn/`:
 
 ```
 openfaas-fn/
@@ -375,16 +385,16 @@ argocd app get <app-name> --hard-refresh
 
 ```bash
 # List deployed functions
-faas-cli list --gateway http://192.168.0.101/openfaas
+faas-cli list --gateway https://openfaas.192.168.0.10.sslip.io
 
 # Get function info
-faas-cli describe hello-python --gateway http://192.168.0.101/openfaas
+faas-cli describe hello-python --gateway https://openfaas.192.168.0.10.sslip.io
 
 # View function logs
-faas-cli logs hello-python --gateway http://192.168.0.101/openfaas
+faas-cli logs hello-python --gateway https://openfaas.192.168.0.10.sslip.io
 
 # Remove a function
-faas-cli remove hello-python --gateway http://192.168.0.101/openfaas
+faas-cli remove hello-python --gateway https://openfaas.192.168.0.10.sslip.io
 ```
 
 ### Kubernetes
@@ -411,7 +421,7 @@ kubectl logs -n openfaas-fn -l faas_function=hello-python
 4. **Kubernetes** resources are updated
 
 For OpenFaaS functions with GitOps:
-- Store function source in `app/demo/openfaas-fn/`
+- Store function source in `app/openfaas-fn/`
 - Use CI/CD to build and push images on commit
 - ArgoCD syncs the function CRDs (if using operator mode)
 

@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: openfaas-gateway-tls
+  namespace: openfaas
+spec:
+  commonName: openfaas.192.168.0.10.sslip.io
+  dnsNames:
+    - openfaas.192.168.0.10.sslip.io
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned-cluster-issuer
+  secretName: openfaas-gateway-tls
