@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespaces.yaml
+  - argocd-fission-crds.yaml
+  - argocd-fission.yaml
+  - certificate.yaml
+  - ingress-http-redirect.yaml
+  - ingress.yaml

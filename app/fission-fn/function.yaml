@@ -1,0 +1,63 @@
+apiVersion: fission.io/v1
+kind: Environment
+metadata:
+  name: python
+  namespace: fission-function
+spec:
+  poolsize: 1
+  runtime:
+    image: ghcr.io/fission/python-env
+  version: 1
+---
+apiVersion: fission.io/v1
+kind: Package
+metadata:
+  name: hello-python-pkg
+  namespace: fission-function
+  annotations:
+    app.kubernetes.io/name: hello-python
+    app.kubernetes.io/version: f0f274564061321f5f7498b79d3bfb62062074916a39e461bfdac153bc691ebb
+spec:
+  environment:
+    name: python
+    namespace: fission-function
+  deployment:
+    type: literal
+    literal: ZGVmIG1haW4oKToKICAgIHJldHVybiAiSGVsbG8gZnJvbSBGaXNzaW9uISIK
+---
+apiVersion: fission.io/v1
+kind: Function
+metadata:
+  name: hello-python
+  namespace: fission-function
+  annotations:
+    app.kubernetes.io/name: hello-python
+    app.kubernetes.io/version: f0f274564061321f5f7498b79d3bfb62062074916a39e461bfdac153bc691ebb
+spec:
+  environment:
+    name: python
+    namespace: fission-function
+  package:
+    packageref:
+      name: hello-python-pkg
+      namespace: fission-function
+  InvokeStrategy:
+    StrategyType: execution
+    ExecutionStrategy:
+      ExecutorType: poolmgr
+      MinScale: 0
+      MaxScale: 1
+---
+apiVersion: fission.io/v1
+kind: HTTPTrigger
+metadata:
+  name: hello-python
+  namespace: fission-function
+spec:
+  functionref:
+    name: hello-python
+    type: name
+  host: fission.192.168.0.10.sslip.io
+  methods:
+    - GET
+  relativeurl: /hello-python
