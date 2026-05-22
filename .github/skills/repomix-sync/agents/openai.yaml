@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repomix Sync"
+  short_description: "Keep repomix output aligned with current ArgoCd code."
+  default_prompt: "Use this skill when ArgoCd repomix output must be regenerated or scoped for AI-assisted analysis."

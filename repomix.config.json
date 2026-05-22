@@ -1,0 +1,16 @@
+{
+  "output": {
+    "filePath": "repomix-output.md",
+    "style": "markdown",
+    "splitOutput": 12000000
+  },
+  "ignore": {
+    "customPatterns": [
+      ".venv/**",
+      ".direnv/**",
+      "repomix-output*",
+      ".env*",
+      ".codex*"
+    ]
+  }
+}
